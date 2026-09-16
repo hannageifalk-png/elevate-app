@@ -13,4 +13,5 @@ Elevate är en fullstack fitness plattform med tre olika användarnivåer.
 - React
 - TypeScript
 - Node.js
-- MySQL
+- Express
+- PostreSQL
