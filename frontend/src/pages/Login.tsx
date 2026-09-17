@@ -21,12 +21,12 @@ function Login() {
       return;
     }
 
-    setMessage("Logged in!");
+    setMessage("Inloggad!");
   };
 
   return (
     <main>
-      <h1>Login</h1>
+      <h1>Logga in</h1>
 
       <form onSubmit={handleLogin}>
         <div>
@@ -41,7 +41,7 @@ function Login() {
         </div>
 
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Lösenord</label>
           <input
             id="password"
             type="password"
@@ -51,14 +51,14 @@ function Login() {
           />
         </div>
 
-        <button type="submit">Login</button>
+        <button type="submit">Logga in</button>
       </form>
 
       {message && <p>{message}</p>}
 
       <p>
-        Don't have an account?{" "}
-        <Link to="/register">Create account</Link>
+        Har du inget konto?{" "}
+        <Link to="/register">Skapa konto</Link>
       </p>
     </main>
   );
