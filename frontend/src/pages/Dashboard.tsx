@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 
 function Dashboard() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -20,7 +20,11 @@ function Dashboard() {
   return (
     <main>
       <h1>Dashboard</h1>
+
       <p>Inloggad som: {user?.email}</p>
+      <p>Name: {profile?.display_name}</p>
+      <p>Role: {profile?.role}</p>
+      
       <button onClick={handleLogout}>
         Logga ut
       </button>
