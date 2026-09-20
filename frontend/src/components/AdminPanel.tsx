@@ -4,9 +4,6 @@ import { useMockState } from "../context/mockState";
 import { MOCK_PROGRAMS } from "../mock/programs";
 import "./AdminPanel.css";
 
-// Testpanel för att byta låtsasläge (nivå, aktivt program, gjorda pass) medan
-// sidorna byggs. Visas bara i utvecklingsläge. Tas bort när backend kopplas in.
-
 const LEVELS = [0, 1, 2];
 
 function AdminPanel() {
@@ -51,6 +48,13 @@ function AdminPanel() {
       <div className="admin-panel-group">
         <p className="eyebrow">Medlemsnivå</p>
         <div className="admin-panel-choices">
+          <button
+            type="button"
+            className={choice(state.level === null)}
+            onClick={() => setLevel(null)}
+          >
+            Din riktiga nivå
+          </button>
           {LEVELS.map((level) => (
             <button
               key={level}

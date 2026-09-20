@@ -1,17 +1,14 @@
 import { createContext, useContext } from "react";
 
-// Låtsasläge för att testa programsidan utan backend.
-// Ändras med AdminPanel. Tas bort när riktig data kopplas in.
-
 export type MockState = {
-  level: number; // 0 Free, 1 Standard, 2 Premium
+  level: number | null;
   activeProgramId: string | null;
-  doneCount: number; // antal pass gjorda i det aktiva programmet
+  doneCount: number;
 };
 
 export type MockStateValue = {
   state: MockState;
-  setLevel: (level: number) => void;
+  setLevel: (level: number | null) => void;
   setActiveProgram: (programId: string | null) => void;
   setDoneCount: (count: number) => void;
   reset: () => void;
