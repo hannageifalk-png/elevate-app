@@ -1,11 +1,15 @@
+import elevateLogo from "../assets/elevate-logo.png";
+
 function HomePage() {
   return (
     <main className="homePage">
-      <header className="homeHeader">
-        <h1>Elevate</h1>
-      </header>
+    <header className="homeHeader">
+        <img src={elevateLogo} alt="Elevate" />
+    </header>
+
 
       <section className="membershipCards">
+
         <article className="membershipCard">
           <h2>FREE</h2>
           <p>Kom igång med din träning.</p>
@@ -24,7 +28,9 @@ function HomePage() {
           <p>Maximera din träning med fler program,</p>
           <p>djupare statistik och exklusiva funktioner.</p>
         </article>
+
       </section>
+
 
       <nav className="bottomNav">
         <button>Hem</button>
