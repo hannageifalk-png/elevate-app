@@ -8,6 +8,16 @@
   font-size: 18px;
 }
 
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.program-card:hover {
+  text-decoration: none;
+}
+
 .btn-large small {
   font-size: 14px;
   font-weight: 400;
