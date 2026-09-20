@@ -20,12 +20,14 @@ type AuthContextType = {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
+  refreshProfile: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   profile: null,
   loading: true,
+  refreshProfile: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -48,6 +50,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setProfile(data);
   };
+
+  const refreshProfile = async () => {
+  if (user) {
+    await fetchProfile(user.id);
+  }
+};
 
   useEffect(() => {
     const loadUser = async () => {
@@ -86,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading }}>
+    <AuthContext.Provider value={{ user, profile, loading, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

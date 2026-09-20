@@ -1,111 +1,339 @@
+/* ==========================================================================
+   ELEVATE - global stylesheet
+   ==========================================================================
+
+   Så här funkar filen:
+
+   1. VARIABLER  - alla färger, mellanrum och radier bor i :root längst upp.
+                   Ändra en färg där så ändras den i hela appen.
+   2. GRUND      - vanliga HTML-taggar (h1, p, button, input...) är redan
+                   stylade. Du behöver oftast inte skriva någon CSS alls.
+   3. KLASSER    - några få återanvändbara klasser längst ned (.card, .btn-ghost,
+                   .eyebrow, .muted ...) för det som grunden inte täcker.
+
+   Regel: använd var(--variabel), skriv aldrig en hex-kod direkt i en regel.
+   Behöver du en färg som inte finns? Lägg till den i :root, inte inline.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. VARIABLER
+   ========================================================================== */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* --- Bakgrunder ------------------------------------------------------ */
+  --bg:            #1E3A5F; /* marinblå, sidans botten */
+  --bg-deep:       #162C49; /* mörkare, t.ex. bottennav och inputfält */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* --- Ytor (kort och paneler ovanpå bakgrunden) ----------------------- */
+  --surface:       #26486F; /* vanligt kort */
+  --surface-hover: #2E5480; /* kort man hovrar eller har valt */
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* --- Text ------------------------------------------------------------ */
+  --text:          #E7E5E4; /* varm ljusgrå, rubriker och brödtext */
+  --text-muted:    #7C93B0; /* dämpat blågrå, sekundär text och labels */
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* --- Accent (knappar, länkar, framsteg) ------------------------------ */
+  --accent:        #3B82F6; /* kobolt */
+  --accent-hover:  #5C9BFF; /* ljusare vid hover */
+  --accent-soft:   rgba(59, 130, 246, 0.15); /* svag bakgrund, t.ex. badges */
+  --on-accent:     #FFFFFF; /* text ovanpå accentfärgen */
+
+  /* --- Signalfärger, använd sparsamt ----------------------------------- */
+  --highlight:     #F5A524; /* varm accent: nytt rekord, "pass klart" */
+  --danger:        #F87171; /* felmeddelanden */
+
+  /* --- Linjer och skuggor ---------------------------------------------- */
+  --border:        rgba(231, 229, 226, 0.14); /* tunn ljus kant */
+  --border-strong: rgba(231, 229, 226, 0.28); /* tydligare kant */
+  --shadow:        0 8px 24px rgba(0, 0, 0, 0.25);
+
+  /* --- Mellanrum, använd dessa istället för egna px-värden ------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+
+  /* --- Rundade hörn ---------------------------------------------------- */
+  --radius-sm:   10px;  /* inputfält */
+  --radius:      16px;  /* kort */
+  --radius-lg:   22px;  /* stora paneler */
+  --radius-pill: 999px; /* knappar */
+
+  /* --- Typsnitt -------------------------------------------------------- */
+  --font: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* --- Sidans maxbredd ------------------------------------------------- */
+  --page-width: 520px; /* appen är mobilformad, höj om ni vill ha desktop */
+
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
+/* ==========================================================================
+   2. GRUND - vanliga taggar
+   ========================================================================== */
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* Varje sida ligger i en <main>. Den centrerar innehållet åt er. */
+main {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-3) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+
+/* --- Rubriker och text ------------------------------------------------- */
+
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h2,
+h3 {
+  margin: 0;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  font-size: 32px;
+  letter-spacing: -0.5px;
 }
+
 h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+  font-size: 22px;
 }
+
+h3 {
+  font-size: 18px;
+}
+
 p {
   margin: 0;
+  color: var(--text-muted);
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+a {
+  color: var(--accent);
+  text-decoration: none;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+
+/* --- Kort -------------------------------------------------------------- */
+
+/* En <section> direkt i <main> blir automatiskt ett kort.
+   Vill du ha ett kort någon annanstans: sätt class="card". */
+main > section,
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Ett kort inuti ett kort ska inte se ut som ett till kort. */
+main > section section,
+.card .card {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+
+/* --- Knappar ----------------------------------------------------------- */
+
+button {
+  appearance: none;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 14px var(--space-4);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button:hover {
+  background: var(--accent-hover);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  background: var(--surface-hover);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+
+/* --- Formulär ---------------------------------------------------------- */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Fungerar både när labeln står före inputen och när inputen ligger inuti. */
+label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px var(--space-3);
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px; /* under 16px zoomar iOS in när fältet får fokus */
+}
+
+input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+
+/* ==========================================================================
+   3. KLASSER - plocka det du behöver
+   ========================================================================== */
+
+/* Liten versal etikett ovanför en rubrik, med accentstreck under.
+   <p class="eyebrow">GYM</p> */
+.eyebrow {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.eyebrow::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 2px;
+  margin-top: var(--space-1);
+  background: var(--accent);
+}
+
+/* Dämpad text där grundstilen inte redan dämpar den. */
+.muted {
+  color: var(--text-muted);
+}
+
+/* Liten färgad etikett, t.ex. medlemsnivå. <span class="badge">PRO</span> */
+.badge {
+  align-self: flex-start;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Sekundär knapp: genomskinlig med kant. <button class="btn-ghost"> */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn-ghost:hover {
+  background: var(--accent-soft);
+}
+
+/* Diskret knapp utan kant, t.ex. "Logga ut". */
+.btn-quiet {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.btn-quiet:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+/* Kort som går att klicka på. */
+.card-link {
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.card-link:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+/* Låst innehåll: dämpat men fortfarande läsbart. */
+.locked {
+  opacity: 0.55;
+}
+
+/* Felmeddelande i formulär. */
+.error {
+  color: var(--danger);
+  font-size: 14px;
+}
+
+/* Rad med innehåll bredvid varandra som bryter ned på små skärmar. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.row-between {
+  justify-content: space-between;
 }
