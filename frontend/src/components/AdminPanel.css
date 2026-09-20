@@ -1,5 +1,3 @@
-/* Testpanelen ligger utanför sidornas layout och påverkar dem inte. */
-
 .admin-panel,
 .admin-panel-toggle {
   position: fixed;

@@ -10,12 +10,12 @@ import App from "./App.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-    <AuthProvider>
-      <MockStateProvider>
+    <MockStateProvider>
+      <AuthProvider>
         <App />
         {import.meta.env.DEV && <AdminPanel />}
-      </MockStateProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </MockStateProvider>
     </BrowserRouter>
   </StrictMode>
 );

@@ -9,7 +9,7 @@ import {
 const STORAGE_KEY = "elevate-mock-state";
 
 const DEFAULT_STATE: MockState = {
-  level: 1,
+  level: null,
   activeProgramId: null,
   doneCount: 0,
 };
@@ -25,7 +25,7 @@ function loadState(): MockState {
     return {
       level: [0, 1, 2].includes(parsed.level ?? -1)
         ? (parsed.level as number)
-        : DEFAULT_STATE.level,
+        : null,
       activeProgramId: program ? program.id : null,
       doneCount: program
         ? Math.min(Math.max(parsed.doneCount ?? 0, 0), program.days.length)
@@ -43,7 +43,7 @@ export function MockStateProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
-      // localStorage kan vara blockerat, det går bra utan
+      return;
     }
   }, [state]);
 
