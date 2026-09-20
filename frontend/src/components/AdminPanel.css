@@ -1,0 +1,54 @@
+/* Testpanelen ligger utanför sidornas layout och påverkar dem inte. */
+
+.admin-panel,
+.admin-panel-toggle {
+  position: fixed;
+  top: var(--space-2);
+  right: var(--space-2);
+  z-index: 100;
+}
+
+.admin-panel-toggle {
+  padding: var(--space-2) var(--space-3);
+  font-size: 13px;
+  box-shadow: var(--shadow);
+}
+
+.admin-panel {
+  width: min(320px, calc(100vw - 2 * var(--space-2)));
+  max-height: calc(100svh - 2 * var(--space-2));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--bg-deep);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.admin-panel-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.admin-panel-choices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.admin-panel button {
+  padding: var(--space-2) var(--space-3);
+  font-size: 14px;
+}
+
+.admin-panel-value {
+  min-width: 64px;
+  text-align: center;
+  color: var(--text);
+  font-weight: 600;
+}
