@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 function AppLayout() {
   return (
     <>
-      <main>
+      <main className="app-content">
         <Outlet />
       </main>
 
