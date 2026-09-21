@@ -1,11 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
+import ProgramCompleteDialog from "../components/ProgramCompleteDialog";
 import { useMockState } from "../context/mockState";
 import { MOCK_PROGRAMS } from "../mock/programs";
 import "./training.css";
 
 function Training() {
   const navigate = useNavigate();
-  const { state, setDoneCount } = useMockState();
+  const { state, setActiveProgram, setDoneCount } = useMockState();
 
   const program =
     MOCK_PROGRAMS.find((p) => p.id === state.activeProgramId) ?? null;
@@ -17,6 +18,17 @@ function Training() {
   const startNext = () => {
     setDoneCount(state.doneCount + 1);
     navigate("/traning/pass");
+  };
+
+  const restart = () => {
+    if (program) setActiveProgram(program.id);
+  };
+
+  const leave = () => setActiveProgram(null);
+
+  const browse = () => {
+    leave();
+    navigate("/traning/program");
   };
 
   return (
@@ -57,6 +69,15 @@ function Training() {
         <Link to={`/traning/program/${program.id}`}>
           Visa {program.name}
         </Link>
+      )}
+
+      {program && finished && (
+        <ProgramCompleteDialog
+          programName={program.name}
+          onRestart={restart}
+          onBrowse={browse}
+          onContinue={leave}
+        />
       )}
     </main>
   );

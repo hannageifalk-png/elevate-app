@@ -23,11 +23,12 @@ function ProgramList() {
 
         const content = (
           <>
-            <p className="eyebrow">{program.equipment_label}</p>
+            <img className="program-image" src={program.image_url} alt="" />
+            <p className="eyebrow">{program.program_type}</p>
             <h2>{program.name}</h2>
             <p>{program.description}</p>
             <p>
-              {lengthLabel(program.week_count)} · {program.program_type} ·{" "}
+              {lengthLabel(program.week_count)} · {program.equipment_label} ·{" "}
               {program.recommended_sessions_per_week} pass/vecka
             </p>
             {active && <span className="badge">Aktivt program</span>}
