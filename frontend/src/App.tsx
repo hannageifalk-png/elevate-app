@@ -7,6 +7,7 @@ import Membership from "./pages/Membership";
 import Training from "./pages/Training";
 import ComingSoon from "./pages/ComingSoon";
 import AppLayout from "./components/AppLayout";
+import Statistics from "./pages/Statistics";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route element={<ProtectedRoute><AppLayout/></ProtectedRoute>}>
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
         <Route path="/membership" element={<ProtectedRoute><Membership /></ProtectedRoute>}/>
+        <Route path="/statistics" element={<Statistics />} />
       </Route>
 
         <Route path="/traning" element={<Training />} />
