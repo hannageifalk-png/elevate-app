@@ -65,3 +65,40 @@
   justify-content: space-between;
   gap: var(--space-3);
 }
+
+.add-exercise {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text);
+  text-align: left;
+}
+
+.add-exercise:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.add-exercise-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+  font-size: 22px;
+}
+
+.add-exercise small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 400;
+}
