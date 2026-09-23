@@ -211,6 +211,48 @@
   font-weight: 600;
 }
 
+.statistics-lock {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 32px;
+  background: #152536;
+  border: 1px solid #34495e;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.statistics-lock > p:first-child {
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.statistics-lock h1 {
+  margin-bottom: 24px;
+}
+
+.statistics-lock h2 {
+  margin-bottom: 12px;
+}
+
+.statistics-lock > p {
+  line-height: 1.6;
+}
+
+.upgrade-button {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 20px;
+  background: #b7ff00;
+  color: #152536;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.upgrade-button:hover {
+  opacity: 0.9;
+}
+
 @media (max-width: 700px) {
    .lift-grid {
     grid-template-columns: repeat(2, 1fr);
