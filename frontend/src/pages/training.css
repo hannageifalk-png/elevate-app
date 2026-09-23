@@ -24,12 +24,34 @@
   opacity: 0.85;
 }
 
+.program-image-wrap {
+  position: relative;
+}
+
 .program-image {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
   object-position: center 25%;
   border-radius: var(--radius-sm);
+}
+
+.lock-badge {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: rgba(15, 23, 42, 0.55);
+  color: var(--text);
+}
+
+.next-day {
+  border-color: var(--accent);
 }
 
 .program-meta {

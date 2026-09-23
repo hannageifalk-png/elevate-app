@@ -1,0 +1,89 @@
+.set-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.set-editor-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.set-editor-row span:first-child {
+  width: 48px;
+  font-size: 14px;
+}
+
+.set-editor-row input {
+  width: 100px;
+  text-align: center;
+}
+
+.set-editor-row input:disabled {
+  background: var(--surface-hover);
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+.swap-candidate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.pass-exercise-done {
+  border-color: var(--highlight);
+}
+
+.badge-highlight {
+  background: var(--highlight-soft);
+  color: var(--highlight);
+}
+
+.set-check {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  color: transparent;
+}
+
+.set-check:hover {
+  background: var(--bg-deep);
+  border-color: var(--accent);
+}
+
+.set-check-done {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.set-check-done:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.set-editor-header {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.set-editor-header span:nth-child(2),
+.set-editor-header span:nth-child(3) {
+  width: 100px;
+}
+
+.set-editor-header span:nth-child(4) {
+  width: 32px;
+  text-align: center;
+}

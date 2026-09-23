@@ -23,7 +23,19 @@ function ProgramList() {
 
         const content = (
           <>
-            <img className="program-image" src={program.image_url} alt="" />
+            <div className="program-image-wrap">
+              <img className="program-image" src={program.image_url} alt="" />
+              {locked && (
+                <span className="lock-badge" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" width="16" height="16">
+                    <path
+                      fill="currentColor"
+                      d="M5 8.5V6.5a5 5 0 0 1 10 0v2h.5A1.5 1.5 0 0 1 17 10v6a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 16v-6a1.5 1.5 0 0 1 1.5-1.5zm2 0h6v-2a3 3 0 0 0-6 0z"
+                    />
+                  </svg>
+                </span>
+              )}
+            </div>
             <p className="eyebrow">{program.program_type}</p>
             <h2>{program.name}</h2>
             <p>{program.description}</p>

@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useMockState } from "../context/mockState";
 import { MEMBERSHIP_NAMES } from "../constants/membership";
-import { lengthLabel, setsLabel } from "../lib/program";
+import { dayToPassExercises, lengthLabel, setsLabel } from "../lib/program";
 import { MOCK_PROGRAMS } from "../mock/programs";
 import "./training.css";
 
@@ -55,8 +55,14 @@ function ProgramDetail() {
     isActive && !finished ? program.days[state.doneCount % dayCount] : null;
 
   const startNext = () => {
+    const day = program.schedule[state.doneCount % dayCount];
     setDoneCount(state.doneCount + 1);
-    navigate("/traning/pass");
+    navigate("/traning/pass", {
+      state: {
+        sessionName: `${program.name} · ${day.name}`,
+        exercises: dayToPassExercises(day.exercises),
+      },
+    });
   };
 
   const leave = () => {
@@ -152,19 +158,26 @@ function ProgramDetail() {
       )}
 
       <h2>Vad ingår</h2>
-      {program.schedule.map((day) => (
-        <section key={day.name}>
-          <h3>{day.name}</h3>
-          <ul className="exercise-list">
-            {day.exercises.map((exercise) => (
-              <li key={exercise.name}>
-                <span>{exercise.name}</span>
-                <span className="muted">{setsLabel(exercise.sets)}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+      {program.schedule.map((day) => {
+        const isNext = isActive && day.name === nextDay;
+
+        return (
+          <section key={day.name} className={isNext ? "next-day" : undefined}>
+            <div className="row row-between">
+              <h3>{day.name}</h3>
+              {isNext && <span className="badge">Nästa</span>}
+            </div>
+            <ul className="exercise-list">
+              {day.exercises.map((exercise) => (
+                <li key={exercise.name}>
+                  <span>{exercise.name}</span>
+                  <span className="muted">{setsLabel(exercise.sets)}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })}
 
       <Link to="/traning/program">← Tillbaka till programlistan</Link>
     </main>

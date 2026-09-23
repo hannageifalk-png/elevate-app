@@ -49,6 +49,7 @@
 
 .set-editor-row input {
   width: 72px;
+  text-align: center;
 }
 
 .set-editor-row .btn-quiet {

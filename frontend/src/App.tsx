@@ -8,7 +8,7 @@ import Training from "./pages/Training";
 import ProgramList from "./pages/ProgramList";
 import ProgramDetail from "./pages/ProgramDetail";
 import OwnSession from "./pages/OwnSession";
-import ComingSoon from "./pages/ComingSoon";
+import PassSession from "./pages/PassSession";
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
         <Route path="/traning/program" element={<ProgramList />} />
         <Route path="/traning/program/:programId" element={<ProgramDetail />} />
         <Route path="/traning/dagens" element={<OwnSession />} />
-        <Route path="/traning/pass" element={<ComingSoon title="Ditt pass" />} />
+        <Route path="/traning/pass" element={<PassSession />} />
       </Route>
     </Routes>
   );

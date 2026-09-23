@@ -1,14 +1,9 @@
 import { useState } from "react";
 import { setsLabel } from "../lib/program";
-import type { SetTemplate } from "../lib/program";
+import type { PassExercise, SetTemplate } from "../lib/program";
 import "./OwnSessionExerciseCard.css";
 
-export type SessionExercise = {
-  name: string;
-  muscleGroup: string;
-  measureType: "reps" | "time";
-  sets: SetTemplate[];
-};
+export type SessionExercise = PassExercise;
 
 type OwnSessionExerciseCardProps = {
   exercise: SessionExercise;
