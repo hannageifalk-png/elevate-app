@@ -5,13 +5,14 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import HomePage from "./pages/HomePage";
 import Membership from "./pages/Membership";
+import Calendar from "./pages/Calendar";
 import Training from "./pages/Training";
 import ComingSoon from "./pages/ComingSoon";
 import AppLayout from "./components/AppLayout";
 
 function App() {
   return (
- <Routes>
+<Routes>
   <Route path="/" element={<Navigate to="/login" replace />} />
   <Route path="/login" element={<Login />} />
   <Route path="/register" element={<Register />} />
@@ -21,6 +22,7 @@ function App() {
   <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
     <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
     <Route path="/membership" element={<ProtectedRoute><Membership /></ProtectedRoute>} />
+    <Route path="/calendar" element={<Calendar />} />
   </Route>
 
   <Route path="/traning" element={<Training />} />
