@@ -241,33 +241,43 @@ function Statistics() {
         fetchAllSets();
         }, [profile]);
 
-    const personalRecords = (() => {
-        const bestRecords = new Map<string, number>();
-        let count = 0;
+const personalRecords = (() => {
+    const bestRecords = new Map<string, number>();
+    let count = 0;
 
-        allSets.forEach((set) => {
-            const key = `${set.exerciseId}-${set.reps_done}`;
-            const previousBest = bestRecords.get(key) ?? 0;
+    allSets.forEach((set) => {
+        if (set.reps_done !== 1) return;
 
-            if (set.weight > previousBest) {
-            const setDate = new Date(set.completed_at);
-            const today = new Date();
+        const key = set.exerciseId;
+        
+        const previousBest = bestRecords.get(key);
 
-            const days = period === "week" ? 7 : 30;
+        // Första registreringen sätter startrekordet,
+        // men räknas inte som ett nytt personbästa.
+        if (previousBest === undefined) {
+        bestRecords.set(key, set.weight);
+        return;
+        }
 
-            const startDate = new Date(today);
-            startDate.setDate(today.getDate() - days);
+        if (set.weight > previousBest) {
+        const setDate = new Date(set.completed_at);
+        const today = new Date();
 
-            if (setDate >= startDate && setDate <= today) {
-                count++;
-            }
+        const days = period === "week" ? 7 : 30;
 
-            bestRecords.set(key, set.weight);
-            }
-        });
+        const startDate = new Date(today);
+        startDate.setDate(today.getDate() - days);
 
-        return count;
-        })();
+        if (setDate >= startDate && setDate <= today) {
+            count++;
+        }
+
+        bestRecords.set(key, set.weight);
+        }
+    });
+
+    return count;
+    })();
 
 
     const filteredStrengthData = strengthData.filter((item) => {
