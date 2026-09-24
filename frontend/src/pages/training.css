@@ -8,8 +8,119 @@
   font-size: 18px;
 }
 
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.program-card:hover {
+  text-decoration: none;
+}
+
 .btn-large small {
   font-size: 14px;
   font-weight: 400;
   opacity: 0.85;
+}
+
+.program-image-wrap {
+  position: relative;
+}
+
+.program-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center 25%;
+  border-radius: var(--radius-sm);
+}
+
+.lock-badge {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: rgba(15, 23, 42, 0.55);
+  color: var(--text);
+}
+
+.next-day {
+  border-color: var(--accent);
+}
+
+.program-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.program-meta dt {
+  color: var(--text-muted);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.program-meta dd {
+  margin: var(--space-1) 0 0;
+  font-weight: 600;
+}
+
+.exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exercise-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.add-exercise {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text);
+  text-align: left;
+}
+
+.add-exercise:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.add-exercise-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+  font-size: 22px;
+}
+
+.add-exercise small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 400;
 }

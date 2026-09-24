@@ -1,0 +1,59 @@
+.own-session-card {
+  gap: var(--space-2);
+}
+
+.icon-button {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.icon-button:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.icon-button-confirm {
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+}
+
+.icon-button-confirm:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.set-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.set-editor-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.set-editor-row span:first-child {
+  width: 48px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.set-editor-row input {
+  width: 72px;
+  text-align: center;
+}
+
+.set-editor-row .btn-quiet {
+  padding: var(--space-1) var(--space-2);
+  font-size: 16px;
+  line-height: 1;
+}
