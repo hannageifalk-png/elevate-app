@@ -11,6 +11,7 @@ import OwnSession from "./pages/OwnSession";
 import PassSession from "./pages/PassSession";
 import AppLayout from "./components/AppLayout";
 import Statistics from "./pages/Statistics";
+import MyAccount from "./pages/MyAccount";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/membership" element={<Membership />} />
         <Route path="/statistics" element={<Statistics />} />
+        <Route path="/my-account" element={<MyAccount />} />
 
         <Route path="/traning" element={<Training />} />
         <Route path="/traning/program" element={<ProgramList />} />
