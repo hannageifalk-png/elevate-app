@@ -13,6 +13,7 @@
   cursor: pointer;
 }
 
+/* GLÖM EJ!!! Ändra till rätt gul färg senare. */
 .calendarGrid button.today {
   color: var(--highlight);
   font-weight: 600;
