@@ -17,18 +17,9 @@ function HomePage() {
 
       <section className="dailyWorkout">
         <h2>Dagens pass</h2>
-        <p>Full Body</p>
-        <span>6 övningar · 45 min</span>
-        <button>STARTA PASS</button>
-      </section>
-
-      <section className="quickAccess">
-        <h2>Snabbåtkomst</h2>
-
-        <div className="quickAccessGrid">
-          <button>Statistik</button>
-          <button>Kalender</button>
-        </div>
+        <h3>Full Body</h3>
+          <p>6 övningar · 45 min</p>
+          <button>SE PASS →</button>
       </section>
 
       <section className="exploreSection">
@@ -54,7 +45,7 @@ function HomePage() {
 
       <section className="recentWorkouts">
         <h2>Senaste träning</h2>
-        <p>Här kommer dina senaste träningspass att visas.</p>
+        <p>Här visas dina senaste träningspass.</p>
       </section>
 
       <section className="premiumSection">
@@ -72,14 +63,6 @@ function HomePage() {
           <button>UPPGRADERA</button>
         </article>
       </section>
-
-      <nav className="bottomNav">
-        <button>Hem</button>
-        <button>Statistik</button>
-        <button>Play</button>
-        <button>Kalender</button>
-        <button>Profil</button>
-      </nav>
 
     </main>
   );

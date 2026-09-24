@@ -9,3 +9,12 @@
   width: 300px;
   height: auto;
 }
+
+.dailyWorkout {
+  position: relative;
+}
+
+.dailyWorkout button {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}
