@@ -1,0 +1,308 @@
+.statistics {
+  width: min(900px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.statistics header {
+  margin-bottom: 32px;
+}
+
+.statistics header p {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.statistics h1 {
+  margin-top: 4px;
+}
+
+.lift-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.lift-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 18px;
+
+  border: 1px solid #34495e;
+  border-radius: 12px;
+
+  background: #152536;
+  color: white;
+
+  cursor: pointer;
+}
+
+.lift-card span {
+  font-size: 13px;
+}
+
+.lift-card strong {
+  font-size: 20px;
+}
+
+.lift-card.selected {
+  border-color: #b7ff00;
+}
+
+.rm-card {
+  margin-top: 20px;
+  padding: 20px;
+
+  background: #152536;
+  border: 1px solid #34495e;
+  border-radius: 12px;
+}
+
+.rm-card h3 {
+  margin: 0 0 16px;
+}
+
+.rm-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.rm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid #34495e;
+}
+
+.rm-row:last-child {
+  border-bottom: none;
+}
+
+.rm-row span {
+  color: #b7ff00;
+  font-weight: 600;
+}
+
+.rm-row strong {
+  font-size: 16px;
+}
+
+.overview {
+  margin-bottom: 32px;
+}
+
+.period-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.period-toggle button {
+  padding: 8px 18px;
+
+  background: transparent;
+  color: #e4edf8;
+
+  border: 1px solid #34495e;
+  border-radius: 20px;
+
+  cursor: pointer;
+}
+
+.period-toggle button.active {
+  background: #b7ff00;
+  border-color: #b7ff00;
+  color: #152536;
+  font-weight: 600;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.overview-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  padding: 18px;
+
+  background: #152536;
+  border: 1px solid #34495e;
+  border-radius: 12px;
+}
+
+.overview-card strong {
+  font-size: 24px;
+}
+
+.overview-card span {
+  font-size: 13px;
+}
+
+.strength-progress {
+  margin-top: 32px;
+  padding: 20px;
+
+  background: #152536;
+  border: 1px solid #34495e;
+  border-radius: 12px;
+}
+
+.strength-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 24px;
+}
+
+.strength-header p {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.strength-header h2 {
+  margin: 4px 0 0;
+}
+
+.strength-header span {
+  color: #b7ff00;
+  font-weight: 600;
+}
+
+.chart-container {
+  width: 100%;
+  height: 300px;
+}
+
+.chart-period-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+.chart-period-toggle button {
+  padding: 6px 12px;
+
+  background: transparent;
+  color: #e4edf8;
+
+  border: 1px solid #34495e;
+  border-radius: 16px;
+
+  cursor: pointer;
+}
+
+.chart-period-toggle button.active {
+  background: #b7ff00;
+  border-color: #b7ff00;
+  color: #152536;
+  font-weight: 600;
+}
+
+.statistics-lock {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 32px;
+  background: #152536;
+  border: 1px solid #34495e;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.statistics-lock > p:first-child {
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.statistics-lock h1 {
+  margin-bottom: 24px;
+}
+
+.statistics-lock h2 {
+  margin-bottom: 12px;
+}
+
+.statistics-lock > p {
+  line-height: 1.6;
+}
+
+.upgrade-button {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 20px;
+  background: #b7ff00;
+  color: #152536;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.upgrade-button:hover {
+  opacity: 0.9;
+}
+
+.selected-lift-name {
+    display: block;
+    margin-top: 4px;
+    color: white;
+    font-weight: 600;
+}
+
+@media (max-width: 700px) {
+   .lift-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .overview-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .overview-card {
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .overview-card strong {
+    font-size: 20px;
+  }
+
+  .overview-card span {
+    font-size: 10px;
+  }
+
+  .chart-container {
+    height: 230px;
+  }
+
+  .strength-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+    .strength-header > div:first-child {
+    width: 100%;
+  }
+
+    .strength-header > span {
+    margin-right: auto;
+  }
+
+    .chart-period-toggle {
+    display: flex;
+    gap: 6px;
+  }
+}
