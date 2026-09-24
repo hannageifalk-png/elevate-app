@@ -40,6 +40,7 @@
   --on-accent:     #FFFFFF; /* text ovanpå accentfärgen */
 
   /* --- Signalfärger, använd sparsamt ----------------------------------- */
+  --primary:       #b7ff00; /* limegrön huvudaccent: knappar, aktiva val */
   --highlight:     #F5A524; /* varm accent: nytt rekord, "pass klart" */
   --danger:        #F87171; /* felmeddelanden */
 
