@@ -253,6 +253,13 @@
   opacity: 0.9;
 }
 
+.selected-lift-name {
+    display: block;
+    margin-top: 4px;
+    color: white;
+    font-weight: 600;
+}
+
 @media (max-width: 700px) {
    .lift-grid {
     grid-template-columns: repeat(2, 1fr);

@@ -400,11 +400,13 @@ const personalRecords = (() => {
     <section className="strength-progress">
         <div className="strength-header">
                 <div>
-                <p>Utveckling</p>
-                <h2>Styrkeutveckling</h2>
+                    <p>Utveckling</p>
+                    <h2>Styrkeutveckling</h2>
+                    <span className="selected-lift-name">
+                        {selectedLift.name}
+                    </span>
                 </div>
 
-                <span>{selectedLift.name}</span>
 
                 <div className="chart-period-toggle">
             <button
