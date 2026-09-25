@@ -32,13 +32,21 @@ function Membership(){
 
     const transactionId = crypto.randomUUID();
 
+    const purchaseDetails =
+        selectedTier === 1
+            ? { product_name: "Standard", price: 29 }
+            : { product_name: "Premium", price: 99 };
+
     const { error } = await supabase
         .from("purchase")
         .insert({
-        user_id: user.id,
-        tier: selectedTier,
-        provider: "mock",
-        provider_transaction_id: transactionId,
+            user_id: user.id,
+            tier: selectedTier,
+            product_name: purchaseDetails.product_name,
+            price: purchaseDetails.price,
+            currency: "SEK",
+            provider: "mock",
+            provider_transaction_id: transactionId,
         });
 
     if (error) {

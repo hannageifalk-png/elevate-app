@@ -12,6 +12,8 @@ import ProgramDetail from "./pages/ProgramDetail";
 import OwnSession from "./pages/OwnSession";
 import PassSession from "./pages/PassSession";
 import AppLayout from "./components/AppLayout";
+import Statistics from "./pages/Statistics";
+import MyAccount from "./pages/MyAccount";
 
 function App() {
   return (
@@ -20,11 +22,19 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+      <Route
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/home" element={<HomePage />} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/membership" element={<ProtectedRoute><Membership /></ProtectedRoute>} />
         <Route path="/calendar" element={<Calendar />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/membership" element={<Membership />} />
+        <Route path="/statistics" element={<Statistics />} />
+        <Route path="/my-account" element={<MyAccount />} />
         <Route path="/traning" element={<Training />} />
         <Route path="/traning/program" element={<ProgramList />} />
         <Route path="/traning/program/:programId" element={<ProgramDetail />} />
