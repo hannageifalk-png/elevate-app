@@ -38,7 +38,7 @@ function Navbar() {
         <span>Kalender</span>
       </NavLink>
 
-      <NavLink to="/account" className="nav-item">
+      <NavLink to="/my-account" className="nav-item">
         <UserRound />
         <span>Mitt konto</span>
       </NavLink>
