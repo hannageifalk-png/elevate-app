@@ -1,0 +1,20 @@
+.homeHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.homeHeader img {
+  width: 300px;
+  height: auto;
+}
+
+.dailyWorkout {
+  position: relative;
+}
+
+.dailyWorkout button {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}

@@ -1,44 +1,69 @@
-import elevateLogo from "../assets/elevate-logo.png";
+import elevateLogo from "../assets/elevate-logo-transparent.png";
+import "./HomePage.css";
+import "./HomePage.css";
 
 function HomePage() {
   return (
     <main className="homePage">
-    <header className="homeHeader">
+
+      <header className="homeHeader">
         <img src={elevateLogo} alt="Elevate" />
-    </header>
+      </header>
 
-
-      <section className="membershipCards">
-
-        <article className="membershipCard">
-          <h2>FREE</h2>
-          <p>Kom igång med din träning.</p>
-          <p>Få tillgång till grundläggande funktioner.</p>
-        </article>
-
-        <article className="membershipCard">
-          <h2>PRO</h2>
-          <p>Steg 2: Få tillgång till träningsprogram,</p>
-          <p>avancerad statistik och fler funktioner.</p>
-        </article>
-
-        <article className="membershipCard">
-          <h2>ELITE</h2>
-          <p>Hela paketet!</p>
-          <p>Maximera din träning med fler program,</p>
-          <p>djupare statistik och exklusiva funktioner.</p>
-        </article>
-
+      <section className="welcomeSection">
+        <h1>Hej!</h1>
+        <p>Vad vill du träna idag?</p>
       </section>
 
+      <section className="dailyWorkout">
+        <h2>Dagens pass</h2>
+        <h3>Full Body</h3>
+          <p>6 övningar · 45 min</p>
+          <button>SE PASS →</button>
+      </section>
 
-      <nav className="bottomNav">
-        <button>Hem</button>
-        <button>Statistik</button>
-        <button>Play</button>
-        <button>Uppslag</button>
-        <button>Profil</button>
-      </nav>
+      <section className="exploreSection">
+        <h2>Utforska träning</h2>
+
+        <div className="exploreGrid">
+          <article>
+            <h3>Övningar</h3>
+            <p>Hitta nya övningar</p>
+          </article>
+
+          <article>
+            <h3>Träningsprogram</h3>
+            <p>Hitta ett program för dig</p>
+          </article>
+
+          <article>
+            <h3>Träningspass</h3>
+            <p>Välj ett pass att köra</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="recentWorkouts">
+        <h2>Senaste träning</h2>
+        <p>Här visas dina senaste träningspass.</p>
+      </section>
+
+      <section className="premiumSection">
+        <h2>Mer för dig</h2>
+
+        <article className="lockedCard">
+          <h3>Din detaljerade statistik</h3>
+          <p>🔒 Uppgradera ditt medlemskap för att se mer.</p>
+          <button>UPPGRADERA</button>
+        </article>
+
+        <article className="lockedCard">
+          <h3>Artiklar & träning</h3>
+          <p>🔒 Upptäck mer innehåll med ett uppgraderat medlemskap.</p>
+          <button>UPPGRADERA</button>
+        </article>
+      </section>
+
     </main>
   );
 }

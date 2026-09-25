@@ -29,7 +29,6 @@ function App() {
           </ProtectedRoute>
         }
       >
-        
         <Route path="/home" element={<HomePage />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/dashboard" element={<Dashboard />} />
