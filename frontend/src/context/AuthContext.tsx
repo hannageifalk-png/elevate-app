@@ -15,6 +15,7 @@ type Profile = {
   display_name: string;
   role: number;
   created_at: string;
+  active_program_id: string | null;
 };
 
 type AuthContextType = {
@@ -39,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchProfile = async (userId: string) => {
     const { data, error } = await supabase
       .from("app_user")
-      .select("id, email, display_name, role, created_at")
+      .select("id, email, display_name, role, created_at, active_program_id")
       .eq("id", userId)
       .single();
 
