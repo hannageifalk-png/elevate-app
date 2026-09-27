@@ -2,6 +2,7 @@ import { useAuth } from "../context/AuthContext";
 import { MEMBERSHIP_NAMES } from "../constants/membership";
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
+import { apiFetch } from "../lib/api";
 
 function Membership(){
     const { user, profile, refreshProfile } = useAuth();
@@ -30,60 +31,45 @@ function Membership(){
 
     setPaymentMessage("Behandlar betalningen...");
 
-    const transactionId = crypto.randomUUID();
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
 
-    const purchaseDetails =
-        selectedTier === 1
-            ? { product_name: "Standard", price: 29 }
-            : { product_name: "Premium", price: 99 };
-
-    const { error } = await supabase
-        .from("purchase")
-        .insert({
-            user_id: user.id,
-            tier: selectedTier,
-            product_name: purchaseDetails.product_name,
-            price: purchaseDetails.price,
-            currency: "SEK",
-            provider: "mock",
-            provider_transaction_id: transactionId,
-        });
-
-    if (error) {
-        console.error("Betalningen misslyckades:", error.message);
-        setPaymentMessage("Betalningen kunde inte genomföras.");
+    if (!token) {
+        setPaymentMessage("Ingen giltig inloggning hittades.");
         return;
     }
-    const { error: updateError } = await supabase
-        .from("app_user")
-        .update({ role: selectedTier })
-        .eq("id", user.id);
 
-        
-        if (updateError) {
-            console.error(
-                "Medlemskapet kunde inte uppdateras:",
-                updateError.message
-            );
-            setPaymentMessage(
-                "Betalningen genomfördes, men medlemskapet kunde inte uppdateras."
-            );
-            return;
-        }
-    
+    let result;
+
+    try {
+        result = await apiFetch("/api/purchase", {
+            method: "POST",
+            token,
+            body: { tier: selectedTier },
+        });
+    } catch (error) {
+        console.error("Betalningen misslyckades:", error);
+        setPaymentMessage("Kunde inte nå servern.");
+        return;
+    }
+
+    if (!result.success) {
+        setPaymentMessage(result.message);
+        return;
+    }
+
     await refreshProfile();
 
     setReceipt({
-        transactionId,
-        tier: selectedTier,
-        date: new Date().toLocaleString("sv-SE"),
+        transactionId: result.purchase.transactionId,
+        tier: result.purchase.tier,
+        date: new Date(result.purchase.purchasedAt).toLocaleString("sv-SE"),
     });
 
     setSelectedTier(null);
     setShowPayment(false);
 
     setPaymentMessage("Betalningen genomfördes!");
-
     };
 
 return ( 
