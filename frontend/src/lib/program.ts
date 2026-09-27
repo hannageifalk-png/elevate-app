@@ -14,6 +14,18 @@ export type PassExercise = {
   sets: SetTemplate[];
 };
 
+export type ProgramOverview = {
+  id: string;
+  name: string;
+  description: string;
+  app_user_role: number;
+  recommended_sessions_per_week: number;
+  program_type: string;
+  week_count: number;
+  exercise_count: number;
+  equipment_label: string;
+};
+
 export function dayToPassExercises(
   exercises: { name: string; sets: SetTemplate[] }[],
 ): PassExercise[] {

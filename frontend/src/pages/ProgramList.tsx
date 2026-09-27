@@ -1,30 +1,53 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useMockState } from "../context/mockState";
 import { MEMBERSHIP_NAMES } from "../constants/membership";
 import { lengthLabel } from "../lib/program";
-import { MOCK_PROGRAMS } from "../mock/programs";
+import type { ProgramOverview } from "../lib/program";
+import { supabase } from "../lib/supabase";
+import exampleProgram from "../assets/example-program.jpg";
 import "./training.css";
 
 function ProgramList() {
   const { profile } = useAuth();
-  const { state } = useMockState();
   const navigate = useNavigate();
 
+  const [programs, setPrograms] = useState<ProgramOverview[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPrograms = async () => {
+      const { data } = await supabase.from("program_overview").select("*");
+      setPrograms(data ?? []);
+      setLoading(false);
+    };
+
+    loadPrograms();
+  }, []);
+
   const role = profile?.role ?? 0;
+
+  if (loading) {
+    return (
+      <main>
+        <h1>Välj ett program</h1>
+        <p>Laddar...</p>
+      </main>
+    );
+  }
 
   return (
     <main>
       <h1>Välj ett program</h1>
 
-      {MOCK_PROGRAMS.map((program) => {
+      {programs.map((program) => {
         const locked = role < program.app_user_role;
-        const active = state.activeProgramId === program.id;
+        const active = profile?.active_program_id === program.id;
 
         const content = (
           <>
             <div className="program-image-wrap">
-              <img className="program-image" src={program.image_url} alt="" />
+              <img className="program-image" src={exampleProgram} alt="" />
               {locked && (
                 <span className="lock-badge" aria-hidden="true">
                   <svg viewBox="0 0 20 20" width="16" height="16">
