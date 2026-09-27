@@ -339,3 +339,165 @@ textarea:focus {
 .row-between {
   justify-content: space-between;
 }
+
+/* --- Mitt konto ----------------------------------------------------- */
+
+.my-account {
+  width: min(900px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 48px 0 120px;
+}
+
+.account-header {
+  margin-bottom: 48px;
+}
+
+.account-eyebrow,
+.receipts-heading > p {
+  margin: 0 0 6px;
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.account-header h1 {
+  margin: 0 0 24px;
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.account-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.account-info > div {
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.account-info span {
+  display: block;
+  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+.account-info strong {
+  font-size: 1rem;
+  color: white;
+}
+
+
+/* --- Kvitton -------------------------------------------------------- */
+
+.receipts-heading {
+  margin-bottom: 20px;
+}
+
+.receipts-heading h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.receipt-list {
+  display: grid;
+  gap: 12px;
+}
+
+.receipt-card {
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.receipt-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.receipt-summary h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+}
+
+.receipt-summary p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.85rem;
+}
+
+.receipt-summary > strong {
+  color: white;
+  white-space: nowrap;
+}
+
+.receipt-button {
+  margin-top: 16px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--primary);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.receipt-button,
+.receipt-button:hover,
+.receipt-button:focus,
+.receipt-button:active {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+
+/* --- Utfällt kvitto ------------------------------------------------- */
+
+.receipt-details {
+  margin-top: 12px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.receipt-details h4 {
+  margin: 0 0 14px;
+  color: white;
+}
+
+.receipt-details p {
+  margin: 7px 0;
+  color: rgba(255, 255, 255, 0.7);
+  overflow-wrap: anywhere;
+}
+
+/* --- Mobil ---------------------------------------------------------- */
+
+@media (max-width: 600px) {
+  .my-account {
+    width: min(100% - 24px, 900px);
+    padding-top: 28px;
+  }
+
+  .account-header {
+    margin-bottom: 36px;
+  }
+
+  .account-info {
+    grid-template-columns: 1fr;
+  }
+
+  .receipt-card {
+    padding: 16px;
+  }
+}
