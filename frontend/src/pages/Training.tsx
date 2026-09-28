@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import ProgramCompleteDialog from "../components/ProgramCompleteDialog";
 import { useAuth } from "../context/AuthContext";
 import {
+  attachSessionExerciseIds,
   computeProgramProgress,
   countSessionsSinceStart,
   dayToPassExercises,
   fetchProgramSchedule,
+  fetchSessionExercises,
 } from "../lib/program";
 import type { ProgramOverview, ProgramProgress } from "../lib/program";
 import { supabase } from "../lib/supabase";
@@ -72,20 +74,28 @@ function Training() {
 
     setActionError("");
     setPending(true);
-    const { error } = await supabase.rpc("start_program_day", {
-      p_day_id: progress.nextDay.id,
-    });
-    setPending(false);
+    const { data: workoutSessionId, error } = await supabase.rpc(
+      "start_program_day",
+      { p_day_id: progress.nextDay.id },
+    );
 
-    if (error) {
-      setActionError(error.message);
+    if (error || !workoutSessionId) {
+      setPending(false);
+      setActionError(error?.message ?? "Passet kunde inte startas");
       return;
     }
+
+    const sessionExercises = await fetchSessionExercises(workoutSessionId);
+    setPending(false);
 
     navigate("/traning/pass", {
       state: {
         sessionName: `${program.name} · ${progress.nextDay.name}`,
-        exercises: dayToPassExercises(progress.nextDay.exercises),
+        workoutSessionId,
+        exercises: attachSessionExerciseIds(
+          dayToPassExercises(progress.nextDay.exercises),
+          sessionExercises,
+        ),
       },
     });
   };
