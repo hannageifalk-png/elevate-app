@@ -8,11 +8,30 @@ export type SetTemplate = {
   duration_seconds: number | null;
 };
 
-export type PassExercise = {
+export type PassExerciseTemplate = {
   name: string;
   muscleGroup: string;
   measureType: "reps" | "time";
   sets: SetTemplate[];
+};
+
+export type PassExercise = PassExerciseTemplate & {
+  sessionExerciseId?: string;
+};
+
+export type SessionExerciseRow = {
+  id: string;
+  exerciseId: string;
+  name: string;
+  sortOrder: number;
+};
+
+export type LoggedSetEntry = {
+  session_exercise_id: string;
+  set_number: number;
+  weight: number | null;
+  reps_done: number | null;
+  seconds_done: number | null;
 };
 
 export type ProgramOverview = {
@@ -153,7 +172,7 @@ export function computeProgramProgress(
 
 export function dayToPassExercises(
   exercises: { name: string; sets: SetTemplate[] }[],
-): PassExercise[] {
+): PassExerciseTemplate[] {
   return exercises.map((exercise) => {
     const catalogEntry = EXERCISE_CATALOG.find(
       (e) => e.name === exercise.name,
@@ -176,6 +195,71 @@ export function dayToPassExercises(
       sets: exercise.sets,
     };
   });
+}
+
+export async function fetchSessionExercises(
+  workoutSessionId: string,
+): Promise<SessionExerciseRow[]> {
+  const { data: sessionExercises } = await supabase
+    .from("session_exercise")
+    .select("id, exercise_id, sort_order")
+    .eq("workout_session_id", workoutSessionId)
+    .order("sort_order");
+
+  const exerciseIds = (sessionExercises ?? []).map((se) => se.exercise_id);
+
+  const { data: exercises } = await supabase
+    .from("exercise")
+    .select("id, name")
+    .in("id", exerciseIds);
+
+  return (sessionExercises ?? []).map((se) => ({
+    id: se.id,
+    exerciseId: se.exercise_id,
+    name: (exercises ?? []).find((e) => e.id === se.exercise_id)?.name ?? "",
+    sortOrder: se.sort_order,
+  }));
+}
+
+export function attachSessionExerciseIds(
+  exercises: PassExerciseTemplate[],
+  sessionExercises: SessionExerciseRow[],
+): PassExercise[] {
+  return exercises.map((exercise, i) => ({
+    ...exercise,
+    sessionExerciseId: sessionExercises[i]?.id ?? "",
+  }));
+}
+
+export async function saveLoggedSets(
+  entries: LoggedSetEntry[],
+): Promise<{ error: { message: string } | null }> {
+  if (entries.length === 0) return { error: null };
+
+  const { error } = await supabase.from("logged_set").insert(entries);
+  return { error };
+}
+
+export async function substituteSessionExercise(
+  sessionExerciseId: string,
+  newExerciseName: string,
+): Promise<{ error: { message: string } | null }> {
+  const { data: exercise } = await supabase
+    .from("exercise")
+    .select("id")
+    .eq("name", newExerciseName)
+    .single();
+
+  if (!exercise) {
+    return { error: { message: "Övningen kunde inte hittas i databasen" } };
+  }
+
+  const { error } = await supabase
+    .from("session_exercise")
+    .update({ substituted_exercise_id: exercise.id })
+    .eq("id", sessionExerciseId);
+
+  return { error };
 }
 
 export function describeExercise(

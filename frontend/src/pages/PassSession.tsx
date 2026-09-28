@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import type { PassExercise } from "../lib/program";
+import type { LoggedSetEntry, PassExercise } from "../lib/program";
 import {
   describeExercise,
   findEquivalentExercises,
   movementPatternLabel,
+  saveLoggedSets,
   setsLabel,
+  substituteSessionExercise,
 } from "../lib/program";
 import "./training.css";
 import "./PassSession.css";
 
 type PassState = {
   sessionName: string;
+  workoutSessionId?: string;
   exercises: PassExercise[];
 };
 
@@ -56,6 +59,8 @@ function PassSession() {
   );
   const [finished, setFinished] = useState(false);
   const [swapTarget, setSwapTarget] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+  const [finishError, setFinishError] = useState("");
 
   if (!passState) {
     return (
@@ -92,8 +97,9 @@ function PassSession() {
     }));
   };
 
-  const performSwap = (oldName: string, newName: string) => {
+  const performSwap = async (oldName: string, newName: string) => {
     const { muscleGroup, measureType } = describeExercise(newName);
+    const swapped = exercises.find((exercise) => exercise.name === oldName);
 
     setExercises((prev) =>
       prev.map((exercise) =>
@@ -116,6 +122,45 @@ function PassSession() {
     });
 
     setSwapTarget(null);
+
+    if (swapped?.sessionExerciseId) {
+      await substituteSessionExercise(swapped.sessionExerciseId, newName);
+    }
+  };
+
+  const finishPass = async () => {
+    setFinishError("");
+    setPending(true);
+
+    const entries: LoggedSetEntry[] = [];
+    exercises.forEach((exercise) => {
+      const sessionExerciseId = exercise.sessionExerciseId;
+      if (!sessionExerciseId) return;
+
+      logged[exercise.name].forEach((set, i) => {
+        if (!set.completed) return;
+
+        const value = set.value === "" ? null : Number(set.value);
+
+        entries.push({
+          session_exercise_id: sessionExerciseId,
+          set_number: i + 1,
+          weight: set.weight === "" ? null : Number(set.weight),
+          reps_done: exercise.measureType === "reps" ? value : null,
+          seconds_done: exercise.measureType === "time" ? value : null,
+        });
+      });
+    });
+
+    const { error } = await saveLoggedSets(entries);
+    setPending(false);
+
+    if (error) {
+      setFinishError(error.message);
+      return;
+    }
+
+    setFinished(true);
   };
 
   const doneExerciseCount = exercises.filter((exercise) =>
@@ -246,9 +291,15 @@ function PassSession() {
         );
       })}
 
-      <button type="button" className="btn-large" onClick={() => setFinished(true)}>
-        Avsluta pass
+      <button
+        type="button"
+        className="btn-large"
+        onClick={finishPass}
+        disabled={pending}
+      >
+        {pending ? "..." : "Avsluta pass"}
       </button>
+      {finishError && <p>{finishError}</p>}
 
       <Link to="/traning">← Tillbaka till Träning</Link>
 
