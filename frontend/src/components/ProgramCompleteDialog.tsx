@@ -5,6 +5,7 @@ type ProgramCompleteDialogProps = {
   onRestart: () => void;
   onBrowse: () => void;
   onContinue: () => void;
+  pending?: boolean;
 };
 
 function ProgramCompleteDialog({
@@ -12,6 +13,7 @@ function ProgramCompleteDialog({
   onRestart,
   onBrowse,
   onContinue,
+  pending = false,
 }: ProgramCompleteDialogProps) {
   return (
     <div className="dialog-overlay">
@@ -24,13 +26,23 @@ function ProgramCompleteDialog({
         <h2>Du har klarat {programName}</h2>
         <p>Alla pass i programmet är gjorda. Vad vill du göra nu?</p>
 
-        <button type="button" onClick={onRestart} autoFocus>
+        <button type="button" onClick={onRestart} disabled={pending} autoFocus>
           Kör programmet igen
         </button>
-        <button type="button" className="btn-ghost" onClick={onBrowse}>
+        <button
+          type="button"
+          className="btn-ghost"
+          onClick={onBrowse}
+          disabled={pending}
+        >
           Bläddra bland färdiga program
         </button>
-        <button type="button" className="btn-quiet" onClick={onContinue}>
+        <button
+          type="button"
+          className="btn-quiet"
+          onClick={onContinue}
+          disabled={pending}
+        >
           Gå vidare
         </button>
       </div>

@@ -7,7 +7,6 @@ import {
 } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
-import { MockStateContext } from "./mockState";
 
 type Profile = {
   id: string;
@@ -16,6 +15,7 @@ type Profile = {
   role: number;
   created_at: string;
   active_program_id: string | null;
+  active_program_started_at: string | null;
 };
 
 type AuthContextType = {
@@ -40,7 +40,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchProfile = async (userId: string) => {
     const { data, error } = await supabase
       .from("app_user")
-      .select("id, email, display_name, role, created_at, active_program_id")
+      .select(
+        "id, email, display_name, role, created_at, active_program_id, active_program_started_at"
+      )
       .eq("id", userId)
       .single();
 
@@ -95,15 +97,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const mock = useContext(MockStateContext);
-  const mockLevel = import.meta.env.DEV ? (mock?.state.level ?? null) : null;
-  const shownProfile =
-    profile && mockLevel !== null ? { ...profile, role: mockLevel } : profile;
-
   return (
-    <AuthContext.Provider
-      value={{ user, profile: shownProfile, loading, refreshProfile }}
-    >
+    <AuthContext.Provider value={{ user, profile, loading, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );
