@@ -11,8 +11,7 @@ import "./Navbar.css";
 function Navbar() {
   return (
     <nav className="navbar">
-      <NavLink
-        to="/"
+      <NavLink to="/home"
         className={({ isActive }) =>
             `nav-item ${isActive ? "active" : ""}`
         }
