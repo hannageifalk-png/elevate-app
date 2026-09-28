@@ -6,6 +6,7 @@ import { lengthLabel } from "../lib/program";
 import type { ProgramOverview } from "../lib/program";
 import { supabase } from "../lib/supabase";
 import exampleProgram from "../assets/example-program.jpg";
+import SkeletonBar from "../components/SkeletonBar";
 import "./training.css";
 
 function ProgramList() {
@@ -31,7 +32,16 @@ function ProgramList() {
     return (
       <main>
         <h1>Välj ett program</h1>
-        <p>Laddar...</p>
+        {[1, 2].map((i) => (
+          <div className="card program-card" key={i}>
+            <div className="program-image-wrap">
+              <div className="skeleton program-image" />
+            </div>
+            <SkeletonBar height={12} width="30%" />
+            <SkeletonBar height={22} width="60%" />
+            <SkeletonBar height={14} width="90%" />
+          </div>
+        ))}
       </main>
     );
   }

@@ -1,44 +1,145 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ProgramCompleteDialog from "../components/ProgramCompleteDialog";
-import { useMockState } from "../context/mockState";
-import { dayToPassExercises } from "../lib/program";
-import { MOCK_PROGRAMS } from "../mock/programs";
+import { useAuth } from "../context/AuthContext";
+import {
+  computeProgramProgress,
+  countSessionsSinceStart,
+  dayToPassExercises,
+  fetchProgramSchedule,
+} from "../lib/program";
+import type { ProgramOverview, ProgramProgress } from "../lib/program";
+import { supabase } from "../lib/supabase";
+import SkeletonBar from "../components/SkeletonBar";
 import "./training.css";
+
+const EMPTY_PROGRESS: ProgramProgress = {
+  dayCount: 0,
+  finished: false,
+  nextDay: null,
+};
 
 function Training() {
   const navigate = useNavigate();
-  const { state, setActiveProgram, setDoneCount } = useMockState();
+  const { profile, refreshProfile } = useAuth();
 
-  const program =
-    MOCK_PROGRAMS.find((p) => p.id === state.activeProgramId) ?? null;
-  const dayCount = program ? program.days.length : 0;
-  const finished = program !== null && state.doneCount >= dayCount;
-  const nextDay =
-    program && !finished ? program.days[state.doneCount % dayCount] : null;
+  const [program, setProgram] = useState<ProgramOverview | null>(null);
+  const [progress, setProgress] = useState<ProgramProgress>(EMPTY_PROGRESS);
+  const [loading, setLoading] = useState(true);
+  const [actionError, setActionError] = useState("");
+  const [pending, setPending] = useState(false);
 
-  const startNext = () => {
-    if (!program) return;
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
 
-    const day = program.schedule[state.doneCount % dayCount];
-    setDoneCount(state.doneCount + 1);
+      const activeId = profile?.active_program_id;
+
+      if (!activeId) {
+        setProgram(null);
+        setProgress(EMPTY_PROGRESS);
+        setLoading(false);
+        return;
+      }
+
+      const { data: overview } = await supabase
+        .from("program_overview")
+        .select("*")
+        .eq("id", activeId)
+        .single();
+
+      const schedule = await fetchProgramSchedule(activeId);
+
+      const sessionsSinceStart =
+        profile?.active_program_started_at && profile?.id
+          ? await countSessionsSinceStart(
+              profile.id,
+              schedule.map((day) => day.id),
+              profile.active_program_started_at,
+            )
+          : 0;
+
+      setProgram(overview ?? null);
+      setProgress(computeProgramProgress(schedule, sessionsSinceStart));
+      setLoading(false);
+    };
+
+    load();
+  }, [profile?.active_program_id, profile?.active_program_started_at, profile?.id]);
+
+  const startNext = async () => {
+    if (!progress.nextDay || !program) return;
+
+    setActionError("");
+    setPending(true);
+    const { error } = await supabase.rpc("start_program_day", {
+      p_day_id: progress.nextDay.id,
+    });
+    setPending(false);
+
+    if (error) {
+      setActionError(error.message);
+      return;
+    }
+
     navigate("/traning/pass", {
       state: {
-        sessionName: `${program.name} · ${day.name}`,
-        exercises: dayToPassExercises(day.exercises),
+        sessionName: `${program.name} · ${progress.nextDay.name}`,
+        exercises: dayToPassExercises(progress.nextDay.exercises),
       },
     });
   };
 
-  const restart = () => {
-    if (program) setActiveProgram(program.id);
+  const restart = async () => {
+    if (!program) return;
+
+    setActionError("");
+    setPending(true);
+    const { error } = await supabase.rpc("start_program", {
+      p_program_id: program.id,
+    });
+
+    if (error) {
+      setPending(false);
+      setActionError(error.message);
+      return;
+    }
+
+    await refreshProfile();
+    setPending(false);
   };
 
-  const leave = () => setActiveProgram(null);
+  const leaveActiveProgram = async () => {
+    setActionError("");
+    setPending(true);
+    const { error } = await supabase.rpc("leave_program");
 
-  const browse = () => {
-    leave();
-    navigate("/traning/program");
+    if (error) {
+      setPending(false);
+      setActionError(error.message);
+      return false;
+    }
+
+    await refreshProfile();
+    setPending(false);
+    return true;
   };
+
+  const browse = async () => {
+    if (await leaveActiveProgram()) {
+      navigate("/traning/program");
+    }
+  };
+
+  if (loading) {
+    return (
+      <main>
+        <h1>Träning</h1>
+        <SkeletonBar height={84} width="100%" />
+        <SkeletonBar height={52} width="100%" />
+      </main>
+    );
+  }
 
   return (
     <main>
@@ -49,12 +150,14 @@ function Training() {
           type="button"
           className="btn-large"
           onClick={startNext}
-          disabled={finished}
+          disabled={progress.finished || pending}
         >
-          {finished
-            ? `${program.name} är avklarat`
-            : `Starta nästa pass i ${program.name}`}
-          {nextDay && <small>{nextDay}</small>}
+          {pending
+            ? "..."
+            : progress.finished
+              ? `${program.name} är avklarat`
+              : `Starta nästa pass i ${program.name}`}
+          {!pending && progress.nextDay && <small>{progress.nextDay.name}</small>}
         </button>
       ) : (
         <button
@@ -66,6 +169,8 @@ function Training() {
         </button>
       )}
 
+      {actionError && <p>{actionError}</p>}
+
       <button
         type="button"
         className="btn-large btn-ghost"
@@ -75,17 +180,16 @@ function Training() {
       </button>
 
       {program && (
-        <Link to={`/traning/program/${program.id}`}>
-          Visa {program.name}
-        </Link>
+        <Link to={`/traning/program/${program.id}`}>Visa {program.name}</Link>
       )}
 
-      {program && finished && (
+      {program && progress.finished && (
         <ProgramCompleteDialog
           programName={program.name}
           onRestart={restart}
           onBrowse={browse}
-          onContinue={leave}
+          onContinue={leaveActiveProgram}
+          pending={pending}
         />
       )}
     </main>

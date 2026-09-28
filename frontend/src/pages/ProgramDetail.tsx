@@ -2,16 +2,24 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { MEMBERSHIP_NAMES } from "../constants/membership";
-import { dayToPassExercises, lengthLabel, setsLabel } from "../lib/program";
-import type { ProgramOverview, SetTemplate } from "../lib/program";
+import {
+  computeProgramProgress,
+  countSessionsSinceStart,
+  dayToPassExercises,
+  fetchProgramSchedule,
+  lengthLabel,
+  setsLabel,
+} from "../lib/program";
+import type { ProgramOverview, ProgramProgress, ScheduleDay } from "../lib/program";
 import { supabase } from "../lib/supabase";
 import exampleProgram from "../assets/example-program.jpg";
+import SkeletonBar from "../components/SkeletonBar";
 import "./training.css";
 
-type ScheduleDay = {
-  id: string;
-  name: string;
-  exercises: { name: string; sets: SetTemplate[] }[];
+const EMPTY_PROGRESS: ProgramProgress = {
+  dayCount: 0,
+  finished: false,
+  nextDay: null,
 };
 
 function ProgramDetail() {
@@ -21,10 +29,14 @@ function ProgramDetail() {
 
   const [program, setProgram] = useState<ProgramOverview | null>(null);
   const [schedule, setSchedule] = useState<ScheduleDay[]>([]);
+  const [progress, setProgress] = useState<ProgramProgress>(EMPTY_PROGRESS);
   const [loading, setLoading] = useState(true);
   const [confirmingLeave, setConfirmingLeave] = useState(false);
   const [startError, setStartError] = useState("");
   const [loadError, setLoadError] = useState(false);
+  const [pending, setPending] = useState(false);
+
+  const isActive = profile?.active_program_id === programId;
 
   useEffect(() => {
     const loadProgram = async () => {
@@ -42,78 +54,29 @@ function ProgramDetail() {
         return;
       }
 
-      const { data: weeks } = await supabase
-        .from("program_week")
-        .select("id, week_number")
-        .eq("program_id", programId)
-        .order("week_number");
+      const days = await fetchProgramSchedule(programId);
 
-      const weekIds = (weeks ?? []).map((week) => week.id);
-
-      const { data: days } = await supabase
-        .from("program_day")
-        .select("id, program_week_id, day_number, name, is_rest_day")
-        .in("program_week_id", weekIds)
-        .order("day_number");
-
-      const dayIds = (days ?? []).map((day) => day.id);
-
-      const { data: slots } = await supabase
-        .from("exercise_slot")
-        .select("id, program_day_id, exercise_id, sort_order")
-        .in("program_day_id", dayIds)
-        .order("sort_order");
-
-      const exerciseIds = (slots ?? []).map((slot) => slot.exercise_id);
-
-      const { data: exercises } = await supabase
-        .from("exercise")
-        .select("id, name")
-        .in("id", exerciseIds);
-
-      const slotIds = (slots ?? []).map((slot) => slot.id);
-
-      const { data: sets } = await supabase
-        .from("set_template")
-        .select("id, exercise_slot_id, set_number, reps_min, reps_max, duration_seconds")
-        .in("exercise_slot_id", slotIds)
-        .order("set_number");
-
-      const trainingDays = (days ?? []).filter((day) => !day.is_rest_day);
-
-      const builtSchedule = trainingDays.map((day) => {
-        const daySlots = (slots ?? []).filter(
-          (slot) => slot.program_day_id === day.id
-        );
-
-        const dayExercises = daySlots.map((slot) => {
-          const exercise = (exercises ?? []).find(
-            (e) => e.id === slot.exercise_id
-          );
-          const exerciseSets = (sets ?? [])
-            .filter((set) => set.exercise_slot_id === slot.id)
-            .map((set) => ({
-              reps_min: set.reps_min,
-              reps_max: set.reps_max,
-              duration_seconds: set.duration_seconds,
-            }));
-
-          return {
-            name: exercise?.name ?? "Okänd övning",
-            sets: exerciseSets,
-          };
-        });
-
-        return { id: day.id, name: day.name, exercises: dayExercises };
-      });
+      const sessionsSinceStart =
+        isActive && profile?.active_program_started_at && profile?.id
+          ? await countSessionsSinceStart(
+              profile.id,
+              days.map((day) => day.id),
+              profile.active_program_started_at,
+            )
+          : 0;
 
       setProgram(overview ?? null);
-      setSchedule(builtSchedule);
+      setSchedule(days);
+      setProgress(
+        isActive
+          ? computeProgramProgress(days, sessionsSinceStart)
+          : EMPTY_PROGRESS,
+      );
       setLoading(false);
     };
 
     loadProgram();
-  }, [programId]);
+  }, [programId, isActive, profile?.active_program_started_at, profile?.id]);
 
   const role = profile?.role ?? 0;
 
@@ -121,26 +84,30 @@ function ProgramDetail() {
     if (!program) return;
 
     setStartError("");
+    setPending(true);
     const { error } = await supabase.rpc("start_program", {
       p_program_id: program.id,
     });
 
     if (error) {
+      setPending(false);
       setStartError(error.message);
       return;
     }
 
     await refreshProfile();
+    setPending(false);
   };
 
-  const startFirstSession = async () => {
-    const firstDay = schedule[0];
-    if (!firstDay || !program) return;
+  const startNextSession = async () => {
+    if (!progress.nextDay || !program) return;
 
     setStartError("");
+    setPending(true);
     const { error } = await supabase.rpc("start_program_day", {
-      p_day_id: firstDay.id,
+      p_day_id: progress.nextDay.id,
     });
+    setPending(false);
 
     if (error) {
       setStartError(error.message);
@@ -149,28 +116,37 @@ function ProgramDetail() {
 
     navigate("/traning/pass", {
       state: {
-        sessionName: `${program.name} · ${firstDay.name}`,
-        exercises: dayToPassExercises(firstDay.exercises),
+        sessionName: `${program.name} · ${progress.nextDay.name}`,
+        exercises: dayToPassExercises(progress.nextDay.exercises),
       },
     });
   };
 
   const leaveProgram = async () => {
+    setPending(true);
     const { error } = await supabase.rpc("leave_program");
 
     if (error) {
+      setPending(false);
       setStartError(error.message);
       return;
     }
 
     await refreshProfile();
+    setPending(false);
     setConfirmingLeave(false);
   };
 
   if (loading) {
     return (
       <main>
-        <p>Laddar...</p>
+        <section>
+          <div className="skeleton program-image" />
+          <SkeletonBar height={12} width="30%" />
+          <SkeletonBar height={28} width="60%" />
+          <SkeletonBar height={14} width="90%" />
+        </section>
+        <SkeletonBar height={52} width="100%" />
       </main>
     );
   }
@@ -214,8 +190,6 @@ function ProgramDetail() {
     );
   }
 
-  const isActive = profile?.active_program_id === program.id;
-
   return (
     <main>
       <section>
@@ -247,9 +221,24 @@ function ProgramDetail() {
 
       {isActive ? (
         <>
-          <button type="button" className="btn-large" onClick={startFirstSession}>
-            Starta första passet
-          </button>
+          {progress.finished ? (
+            <p>
+              Du har klarat {program.name}. Gå till Träning för att köra
+              programmet igen eller välja ett nytt.
+            </p>
+          ) : (
+            <button
+              type="button"
+              className="btn-large"
+              onClick={startNextSession}
+              disabled={!progress.nextDay || pending}
+            >
+              {pending ? "..." : "Starta nästa pass"}
+              {!pending && progress.nextDay && (
+                <small>{progress.nextDay.name}</small>
+              )}
+            </button>
+          )}
           {startError && <p>{startError}</p>}
 
           {confirmingLeave ? (
@@ -257,8 +246,8 @@ function ProgramDetail() {
               <h3>Hoppa av {program.name}?</h3>
               <p>Dina genomförda pass ligger kvar i historiken.</p>
               <div className="row">
-                <button type="button" onClick={leaveProgram}>
-                  Ja, hoppa av
+                <button type="button" onClick={leaveProgram} disabled={pending}>
+                  {pending ? "..." : "Ja, hoppa av"}
                 </button>
                 <button
                   type="button"
@@ -285,9 +274,9 @@ function ProgramDetail() {
             type="button"
             className="btn-large"
             onClick={startProgram}
-            disabled={profile?.active_program_id != null}
+            disabled={profile?.active_program_id != null || pending}
           >
-            Starta program
+            {pending ? "..." : "Starta program"}
           </button>
           {profile?.active_program_id != null && (
             <p>

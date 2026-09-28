@@ -1,5 +1,6 @@
 import { EXERCISE_CATALOG, MUSCLE_GROUPS } from "../mock/exercises";
 import type { CatalogExercise } from "../mock/exercises";
+import { supabase } from "./supabase";
 
 export type SetTemplate = {
   reps_min: number | null;
@@ -25,6 +26,130 @@ export type ProgramOverview = {
   exercise_count: number;
   equipment_label: string;
 };
+
+export type ScheduleDay = {
+  id: string;
+  name: string;
+  exercises: { name: string; sets: SetTemplate[] }[];
+};
+
+export async function fetchProgramSchedule(
+  programId: string,
+): Promise<ScheduleDay[]> {
+  const { data: weeks } = await supabase
+    .from("program_week")
+    .select("id, week_number")
+    .eq("program_id", programId)
+    .order("week_number");
+
+  const weekIds = (weeks ?? []).map((week) => week.id);
+  const weekNumberById = new Map(
+    (weeks ?? []).map((week) => [week.id, week.week_number]),
+  );
+
+  const { data: days } = await supabase
+    .from("program_day")
+    .select("id, program_week_id, day_number, name, is_rest_day")
+    .in("program_week_id", weekIds);
+
+  const sortedDays = (days ?? []).slice().sort((a, b) => {
+    const weekDiff =
+      (weekNumberById.get(a.program_week_id) ?? 0) -
+      (weekNumberById.get(b.program_week_id) ?? 0);
+    return weekDiff !== 0 ? weekDiff : a.day_number - b.day_number;
+  });
+
+  const dayIds = sortedDays.map((day) => day.id);
+
+  const { data: slots } = await supabase
+    .from("exercise_slot")
+    .select("id, program_day_id, exercise_id, sort_order")
+    .in("program_day_id", dayIds)
+    .order("sort_order");
+
+  const exerciseIds = (slots ?? []).map((slot) => slot.exercise_id);
+
+  const { data: exercises } = await supabase
+    .from("exercise")
+    .select("id, name")
+    .in("id", exerciseIds);
+
+  const slotIds = (slots ?? []).map((slot) => slot.id);
+
+  const { data: sets } = await supabase
+    .from("set_template")
+    .select("id, exercise_slot_id, set_number, reps_min, reps_max, duration_seconds")
+    .in("exercise_slot_id", slotIds)
+    .order("set_number");
+
+  const trainingDays = sortedDays.filter((day) => !day.is_rest_day);
+
+  return trainingDays.map((day) => {
+    const daySlots = (slots ?? []).filter(
+      (slot) => slot.program_day_id === day.id,
+    );
+
+    const dayExercises = daySlots.map((slot) => {
+      const exercise = (exercises ?? []).find((e) => e.id === slot.exercise_id);
+      const exerciseSets = (sets ?? [])
+        .filter((set) => set.exercise_slot_id === slot.id)
+        .map((set) => ({
+          reps_min: set.reps_min,
+          reps_max: set.reps_max,
+          duration_seconds: set.duration_seconds,
+        }));
+
+      return {
+        name: exercise?.name ?? "Okänd övning",
+        sets: exerciseSets,
+      };
+    });
+
+    return { id: day.id, name: day.name, exercises: dayExercises };
+  });
+}
+
+export async function countSessionsSinceStart(
+  userId: string,
+  dayIds: string[],
+  startedAt: string,
+): Promise<number> {
+  if (dayIds.length === 0) return 0;
+
+  const { data } = await supabase
+    .from("workout_session")
+    .select("id")
+    .eq("user_id", userId)
+    .in("program_day_id", dayIds)
+    .gte("performed_at", startedAt);
+
+  return (data ?? []).length;
+}
+
+export type ProgramProgress = {
+  dayCount: number;
+  finished: boolean;
+  nextDay: ScheduleDay | null;
+};
+
+export function computeProgramProgress(
+  schedule: ScheduleDay[],
+  sessionsSinceStart: number,
+): ProgramProgress {
+  const dayCount = schedule.length;
+
+  if (dayCount === 0) {
+    return { dayCount: 0, finished: false, nextDay: null };
+  }
+
+  const finished = sessionsSinceStart >= dayCount;
+
+  return {
+    dayCount,
+    finished,
+    nextDay: finished ? null : schedule[sessionsSinceStart % dayCount],
+  };
+}
 
 export function dayToPassExercises(
   exercises: { name: string; sets: SetTemplate[] }[],
