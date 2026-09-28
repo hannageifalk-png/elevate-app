@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 
 function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,7 +24,7 @@ function Login() {
       return;
     }
 
-    setMessage("Inloggad!");
+    navigate("/homepage");  
   };
 
   return (
