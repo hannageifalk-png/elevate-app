@@ -1,3 +1,5 @@
+import { supabase } from "./supabase";
+
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
 type ApiFetchOptions = {
@@ -17,4 +19,9 @@ export async function apiFetch(path: string, options: ApiFetchOptions) {
   });
 
   return response.json();
+}
+
+export async function getAccessToken(): Promise<string | null> {
+  const { data } = await supabase.auth.getSession();
+  return data.session?.access_token ?? null;
 }

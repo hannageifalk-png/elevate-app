@@ -14,6 +14,8 @@ import PassSession from "./pages/PassSession";
 import AppLayout from "./components/AppLayout";
 import Statistics from "./pages/Statistics";
 import MyAccount from "./pages/MyAccount";
+import AdminExercises from "./pages/AdminExercises";
+import RequireAdmin from "./components/RequireAdmin";
 
 function App() {
   return (
@@ -40,6 +42,14 @@ function App() {
         <Route path="/traning/program/:programId" element={<ProgramDetail />} />
         <Route path="/traning/dagens" element={<OwnSession />} />
         <Route path="/traning/pass" element={<PassSession />} />
+        <Route
+          path="/admin/exercises"
+          element={
+            <RequireAdmin>
+              <AdminExercises />
+            </RequireAdmin>
+          }
+        />
       </Route>
     </Routes>
   );
