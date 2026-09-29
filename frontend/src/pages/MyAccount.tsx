@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 
@@ -15,6 +16,19 @@ type Purchase = {
 
 function MyAccount() {
   const { profile } = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Kunde inte logga ut:", error.message);
+      return;
+    }
+
+    navigate("/login", { replace: true });
+  };
 
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [openReceiptId, setOpenReceiptId] = useState<string | null>(null);
@@ -148,6 +162,17 @@ function MyAccount() {
         </div>
       )}
     </section>
+
+    <section className="logout-section">
+      <button
+        type="button"
+        className="logout-button"
+        onClick={handleLogout}
+      >
+        Logga ut
+      </button>
+    </section>
+    
   </main>
   );
 } 
