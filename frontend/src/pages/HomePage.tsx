@@ -18,7 +18,6 @@ import exampleProgram from "../assets/example-program.jpg";
 function HomePage() {
   const { profile } = useAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const [dailyWorkout, setDailyWorkout] = useState<ScheduleDay | null>(null);
   const [exercisePickerOpen, setExercisePickerOpen] = useState(false);
   const [articleExpanded, setArticleExpanded] = useState(false);
@@ -35,7 +34,6 @@ const [recentWorkouts, setRecentWorkouts] = useState<
             const activeId = profile?.active_program_id;
     if (!activeId) {
       setDailyWorkout(null);
-      setLoading(false);
       return;
     }
 
@@ -52,7 +50,6 @@ const [recentWorkouts, setRecentWorkouts] = useState<
 
     const progress = computeProgramProgress(schedule, sessionsSinceStart);
     setDailyWorkout(progress.nextDay);
-    setLoading(false);
     };
       loadDailyWorkout();
     }, [profile?.active_program_id, profile?.active_program_started_at, profile?.id]);
@@ -79,7 +76,13 @@ const [recentWorkouts, setRecentWorkouts] = useState<
       return;
     }
 
-    setRecentWorkouts(data ?? []);
+    const normalizedWorkouts = (data ?? []).map((workout) => ({
+      id: workout.id,
+      performed_at: workout.performed_at,
+      program_day: workout.program_day?.[0] ?? null,
+}));
+
+    setRecentWorkouts(normalizedWorkouts);
   };
 
   fetchRecentWorkouts();
