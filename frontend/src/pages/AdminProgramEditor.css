@@ -1,0 +1,29 @@
+.program-editor-day {
+  border-color: var(--border-strong);
+}
+
+.program-editor-exercise {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--bg-deep);
+  border-radius: var(--radius-sm);
+}
+
+.program-editor-exercise select {
+  flex: 1;
+}
+
+.program-editor-set-row {
+  flex-wrap: nowrap;
+}
+
+.program-editor-set-row .muted {
+  flex-shrink: 0;
+  width: 48px;
+}
+
+.program-editor-set-row input {
+  min-width: 0;
+}

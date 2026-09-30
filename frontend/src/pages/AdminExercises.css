@@ -1,0 +1,67 @@
+.admin-toolbar input[type="search"] {
+  flex: 1;
+  min-width: 160px;
+}
+
+.admin-toolbar button {
+  flex-shrink: 0;
+}
+
+.admin-tabs button {
+  padding: var(--space-2) var(--space-3);
+  font-size: 14px;
+}
+
+.exercise-card .badge-muted {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+}
+
+.muscle-filter {
+  max-width: 260px;
+}
+
+.admin-form-dialog {
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.muscle-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.muscle-group-name {
+  margin: 0 0 var(--space-1);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.muscle-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.muscle-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.muscle-option .picker-checkbox {
+  flex: 1;
+}
+
+.muscle-option select {
+  width: auto;
+  flex-shrink: 0;
+}

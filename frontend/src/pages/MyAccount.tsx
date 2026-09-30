@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
+import { MEMBERSHIP } from "../constants/membership";
 
 type Purchase = {
   id: string;
@@ -162,6 +163,22 @@ function MyAccount() {
         </div>
       )}
     </section>
+
+    {profile.role === MEMBERSHIP.ADMIN && (
+      <section className="admin-link-section">
+        <p className="account-eyebrow">Admin</p>
+        <h2>Adminpanel</h2>
+        <p>Hantera övningskatalogen och de färdiga programmen.</p>
+        <div className="row">
+          <Link to="/admin/exercises" className="link-button">
+            Hantera övningar
+          </Link>
+          <Link to="/admin/programs" className="link-button">
+            Hantera program
+          </Link>
+        </div>
+      </section>
+    )}
 
     <section className="logout-section">
       <button

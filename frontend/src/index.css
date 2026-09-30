@@ -328,6 +328,25 @@ textarea:focus {
   font-size: 14px;
 }
 
+/* Länk som ser ut som en knapp. <Link className="link-button"> */
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  padding: 14px var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+
+.link-button:hover {
+  background: var(--accent-hover);
+  color: var(--on-accent);
+  text-decoration: none;
+}
+
 /* Rad med innehåll bredvid varandra som bryter ned på små skärmar. */
 .row {
   display: flex;
@@ -390,6 +409,24 @@ textarea:focus {
 .account-info strong {
   font-size: 1rem;
   color: white;
+}
+
+.admin-link-section {
+  margin-top: 1.5rem;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.admin-link-section h2 {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+}
+
+.admin-link-section p:not(.account-eyebrow) {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .logout-section {
