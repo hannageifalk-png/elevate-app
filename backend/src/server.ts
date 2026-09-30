@@ -7,6 +7,7 @@ import { requireAdmin } from "./middleware/requireAdmin";
 import { purchaseRouter } from "./routes/purchase";
 import { adminExercisesRouter } from "./routes/adminExercises";
 import { adminMusclesRouter } from "./routes/adminMuscles";
+import { adminProgramsRouter } from "./routes/adminPrograms";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/purchase", requireAuth, purchaseRouter);
 app.use("/api/admin/exercises", requireAuth, requireAdmin, adminExercisesRouter);
 app.use("/api/admin/muscles", requireAuth, requireAdmin, adminMusclesRouter);
+app.use("/api/admin/programs", requireAuth, requireAdmin, adminProgramsRouter);
 
 app.listen(env.port, () => {
   console.log(`Server is running on http://localhost:${env.port}`);

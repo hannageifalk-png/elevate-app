@@ -168,10 +168,15 @@ function MyAccount() {
       <section className="admin-link-section">
         <p className="account-eyebrow">Admin</p>
         <h2>Adminpanel</h2>
-        <p>Hantera övningskatalogen som används i program och eget pass.</p>
-        <Link to="/admin/exercises" className="link-button">
-          Hantera övningar
-        </Link>
+        <p>Hantera övningskatalogen och de färdiga programmen.</p>
+        <div className="row">
+          <Link to="/admin/exercises" className="link-button">
+            Hantera övningar
+          </Link>
+          <Link to="/admin/programs" className="link-button">
+            Hantera program
+          </Link>
+        </div>
       </section>
     )}
 

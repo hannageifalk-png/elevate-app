@@ -6,6 +6,7 @@ import {
   MEASURE_TYPE_LABELS,
   MOVEMENT_PATTERN_LABELS,
 } from "../lib/exerciseLabels";
+import AdminNav from "../components/AdminNav";
 import "./AdminExercises.css";
 
 type MuscleRole = "primary" | "secondary";
@@ -254,6 +255,7 @@ function AdminExercises() {
   if (loading) {
     return (
       <main>
+        <AdminNav />
         <p className="eyebrow">Admin</p>
         <h1>Övningar</h1>
         <p className="muted">Laddar...</p>
@@ -263,6 +265,8 @@ function AdminExercises() {
 
   return (
     <main>
+      <AdminNav />
+
       <div>
         <p className="eyebrow">Admin</p>
         <h1>Övningar</h1>

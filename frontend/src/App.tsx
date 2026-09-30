@@ -15,6 +15,8 @@ import AppLayout from "./components/AppLayout";
 import Statistics from "./pages/Statistics";
 import MyAccount from "./pages/MyAccount";
 import AdminExercises from "./pages/AdminExercises";
+import AdminPrograms from "./pages/AdminPrograms";
+import AdminProgramEditor from "./pages/AdminProgramEditor";
 import RequireAdmin from "./components/RequireAdmin";
 
 function App() {
@@ -47,6 +49,30 @@ function App() {
           element={
             <RequireAdmin>
               <AdminExercises />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/programs"
+          element={
+            <RequireAdmin>
+              <AdminPrograms />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/programs/new"
+          element={
+            <RequireAdmin>
+              <AdminProgramEditor />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/programs/:programId"
+          element={
+            <RequireAdmin>
+              <AdminProgramEditor />
             </RequireAdmin>
           }
         />
