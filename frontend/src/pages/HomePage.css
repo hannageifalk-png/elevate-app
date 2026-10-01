@@ -18,3 +18,152 @@
   align-self: flex-start;
   margin-top: var(--space-2);
 }
+
+.exploreGrid article[role="button"] {
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.exploreGrid article[role="button"]:hover {
+  transform: translateY(-2px);
+  background-color: var(--surface-hover);
+}
+
+.exploreItem {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+}
+
+.exploreOptions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.recentWorkoutList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.recentWorkoutItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.recentWorkoutItem h3,
+.recentWorkoutItem p {
+  margin: 0;
+}
+
+.exploreItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.exploreItem h2,
+.exploreItem p {
+  margin: 0;
+}
+
+.premiumSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.premiumSection h2 {
+  margin: 0;
+}
+
+.lockedCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.lockedCard h3,
+.lockedCard p {
+  margin: 0;
+}
+
+.learnSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.learnSection h2 {
+  margin: 0;
+}
+
+.articleCard {
+  overflow: hidden;
+  padding: 0;
+}
+
+.articleImage {
+  display: block;
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.articleContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.articleContent h3,
+.articleContent p {
+  margin: 0;
+}
+
+.articleContent p {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.articleButton {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}
+
+.dailyWorkout {
+  overflow: hidden;
+}
+
+.dailyWorkoutImage {
+  display: block;
+  width: 100%;
+  height: 330px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.dailyWorkoutContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.dailyWorkoutContent h2,
+.dailyWorkoutContent h3,
+.dailyWorkoutContent p {
+  margin: 0;
+}
+
+.dailyWorkoutContent button {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}

@@ -13,9 +13,8 @@
   cursor: pointer;
 }
 
-/* GLÖM EJ!!! Ändra till rätt gul färg senare. */
 .calendarGrid button.today {
-  color: var(--highlight);
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -44,4 +43,75 @@
   color: var(--text);
   padding: var(--space-1) var(--space-2);
   font-size: 24px;
+}
+
+.muscleDots {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 3px;
+}
+
+.muscleDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  display: block;
+}
+
+.muscleLegendButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin: var(--space-3) auto 0;
+  padding: 8px 14px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.legendDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: block;
+}
+
+.legendGreen {
+  background: #22c55e;
+}
+
+.legendBlue {
+  background: #3b82f6;
+}
+
+.legendPurple {
+  background: #a855f7;
+}
+
+.legendYellow {
+  background: #b7ff00;
+}
+
+.legendOrange {
+  background: #f97316;
+}
+
+.legendRed {
+  background: #ef4444;
+}
+
+.muscleLegendModal {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-3);
+}
+
+.muscleLegendContent {
+  width: 100%;
+  max-width: 300px;
+  padding: var(--space-3);
+  text-align: left;
 }
