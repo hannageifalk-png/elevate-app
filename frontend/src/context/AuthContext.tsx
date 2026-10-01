@@ -63,15 +63,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const loadUser = async () => {
-      const { data } = await supabase.auth.getUser();
+      try {
+        const { data } = await supabase.auth.getUser();
 
-      setUser(data.user);
+        setUser(data.user);
 
-      if (data.user) {
-        await fetchProfile(data.user.id);
+        if (data.user) {
+          await fetchProfile(data.user.id);
+        }
+      } catch (error) {
+        console.error("Failed to load user:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     loadUser();
