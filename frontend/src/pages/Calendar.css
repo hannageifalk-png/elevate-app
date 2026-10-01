@@ -13,9 +13,8 @@
   cursor: pointer;
 }
 
-/* GLÖM EJ!!! Ändra till rätt gul färg senare. */
 .calendarGrid button.today {
-  color: var(--highlight);
+  color: var(--primary);
   font-weight: 600;
 }
 

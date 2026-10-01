@@ -120,7 +120,7 @@ function ProgramDetail() {
     const sessionExercises = await fetchSessionExercises(workoutSessionId);
     setPending(false);
 
-    navigate("/traning/pass", {
+    navigate("/training/pass", {
       state: {
         sessionName: `${program.name} · ${progress.nextDay.name}`,
         workoutSessionId,
@@ -166,7 +166,7 @@ function ProgramDetail() {
       <main>
         <h1>Programmet kunde inte hämtas</h1>
         <p>Något gick fel. Prova att ladda om sidan.</p>
-        <Link to="/traning/program">← Tillbaka till programlistan</Link>
+        <Link to="/training/program">← Tillbaka till programlistan</Link>
       </main>
     );
   }
@@ -175,7 +175,7 @@ function ProgramDetail() {
     return (
       <main>
         <h1>Programmet finns inte</h1>
-        <Link to="/traning/program">← Tillbaka till programlistan</Link>
+        <Link to="/training/program">← Tillbaka till programlistan</Link>
       </main>
     );
   }
@@ -195,7 +195,7 @@ function ProgramDetail() {
           </button>
         </section>
 
-        <Link to="/traning/program">← Tillbaka till programlistan</Link>
+        <Link to="/training/program">← Tillbaka till programlistan</Link>
       </main>
     );
   }
@@ -313,7 +313,7 @@ function ProgramDetail() {
         </section>
       ))}
 
-      <Link to="/traning/program">← Tillbaka till programlistan</Link>
+      <Link to="/training/program">← Tillbaka till programlistan</Link>
     </main>
   );
 }

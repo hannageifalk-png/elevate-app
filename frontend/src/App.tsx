@@ -14,6 +14,10 @@ import PassSession from "./pages/PassSession";
 import AppLayout from "./components/AppLayout";
 import Statistics from "./pages/Statistics";
 import MyAccount from "./pages/MyAccount";
+import AdminExercises from "./pages/AdminExercises";
+import AdminPrograms from "./pages/AdminPrograms";
+import AdminProgramEditor from "./pages/AdminProgramEditor";
+import RequireAdmin from "./components/RequireAdmin";
 
 function App() {
   return (
@@ -35,11 +39,43 @@ function App() {
         <Route path="/membership" element={<Membership />} />
         <Route path="/statistics" element={<Statistics />} />
         <Route path="/my-account" element={<MyAccount />} />
-        <Route path="/traning" element={<Training />} />
-        <Route path="/traning/program" element={<ProgramList />} />
-        <Route path="/traning/program/:programId" element={<ProgramDetail />} />
-        <Route path="/traning/dagens" element={<OwnSession />} />
-        <Route path="/traning/pass" element={<PassSession />} />
+        <Route path="/training" element={<Training />} />
+        <Route path="/training/program" element={<ProgramList />} />
+        <Route path="/training/program/:programId" element={<ProgramDetail />} />
+        <Route path="/training/dagens" element={<OwnSession />} />
+        <Route path="/training/pass" element={<PassSession />} />
+        <Route
+          path="/admin/exercises"
+          element={
+            <RequireAdmin>
+              <AdminExercises />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/programs"
+          element={
+            <RequireAdmin>
+              <AdminPrograms />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/programs/new"
+          element={
+            <RequireAdmin>
+              <AdminProgramEditor />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/programs/:programId"
+          element={
+            <RequireAdmin>
+              <AdminProgramEditor />
+            </RequireAdmin>
+          }
+        />
       </Route>
     </Routes>
   );

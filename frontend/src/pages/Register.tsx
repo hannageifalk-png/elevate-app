@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register () {
+    const navigate = useNavigate();
+
     const [displayName, setDisplayName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -12,7 +14,7 @@ function Register () {
         e.preventDefault();
         setmessage("");
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -27,7 +29,11 @@ function Register () {
         return;
     }
 
-    setmessage("Konto skapat!");
+    if (data.session) {
+        navigate("/home", { replace: true });
+    } else {
+        setmessage("Konto skapat! Bekräfta din e-post för att logga in.");
+    }
     };
 
     return (

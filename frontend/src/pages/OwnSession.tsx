@@ -88,7 +88,7 @@ function OwnSession() {
           type="button"
           className="btn-large"
           onClick={() =>
-            navigate("/traning/pass", {
+            navigate("/training/pass", {
               state: { sessionName: "Eget pass", exercises },
             })
           }
@@ -104,7 +104,7 @@ function OwnSession() {
         />
       )}
 
-      <Link to="/traning">← Tillbaka till Träning</Link>
+      <Link to="/training">← Tillbaka till Träning</Link>
     </main>
   );
 }

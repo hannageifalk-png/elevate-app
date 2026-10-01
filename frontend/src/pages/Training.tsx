@@ -88,7 +88,7 @@ function Training() {
     const sessionExercises = await fetchSessionExercises(workoutSessionId);
     setPending(false);
 
-    navigate("/traning/pass", {
+    navigate("/training/pass", {
       state: {
         sessionName: `${program.name} · ${progress.nextDay.name}`,
         workoutSessionId,
@@ -137,7 +137,7 @@ function Training() {
 
   const browse = async () => {
     if (await leaveActiveProgram()) {
-      navigate("/traning/program");
+      navigate("/training/program");
     }
   };
 
@@ -173,7 +173,7 @@ function Training() {
         <button
           type="button"
           className="btn-large"
-          onClick={() => navigate("/traning/program")}
+          onClick={() => navigate("/training/program")}
         >
           Välj ett program
         </button>
@@ -184,13 +184,13 @@ function Training() {
       <button
         type="button"
         className="btn-large btn-ghost"
-        onClick={() => navigate("/traning/dagens")}
+        onClick={() => navigate("/training/dagens")}
       >
         Skapa ditt eget pass
       </button>
 
       {program && (
-        <Link to={`/traning/program/${program.id}`}>Visa {program.name}</Link>
+        <Link to={`/training/program/${program.id}`}>Visa {program.name}</Link>
       )}
 
       {program && progress.finished && (
