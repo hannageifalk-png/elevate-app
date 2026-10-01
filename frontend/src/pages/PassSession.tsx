@@ -5,7 +5,7 @@ import {
   describeExercise,
   findEquivalentExercises,
   movementPatternLabel,
-  saveLoggedSets,
+  saveExerciseLog,
   setsLabel,
   substituteSessionExercise,
 } from "../lib/program";
@@ -61,6 +61,10 @@ function PassSession() {
   const [swapTarget, setSwapTarget] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [finishError, setFinishError] = useState("");
+  const [savedExercises, setSavedExercises] = useState<Set<string>>(new Set());
+  const [confirmingExercise, setConfirmingExercise] = useState<string | null>(null);
+  const [confirmPending, setConfirmPending] = useState(false);
+  const [confirmError, setConfirmError] = useState("");
 
   if (!passState) {
     return (
@@ -89,11 +93,83 @@ function PassSession() {
   };
 
   const toggleSet = (exerciseName: string, index: number) => {
+    const currentSets = logged[exerciseName];
+    const nextCompleted = !currentSets[index].completed;
+
     setLogged((prev) => ({
       ...prev,
       [exerciseName]: prev[exerciseName].map((set, i) =>
-        i === index ? { ...set, completed: !set.completed } : set,
+        i === index ? { ...set, completed: nextCompleted } : set,
       ),
+    }));
+
+    const allDone = currentSets.every((set, i) =>
+      i === index ? nextCompleted : set.completed,
+    );
+    const exercise = exercises.find((e) => e.name === exerciseName);
+
+    if (allDone && nextCompleted && exercise?.sessionExerciseId && !savedExercises.has(exerciseName)) {
+      setConfirmingExercise(exerciseName);
+    }
+  };
+
+  const buildEntries = (exercise: PassExercise): LoggedSetEntry[] => {
+    const sessionExerciseId = exercise.sessionExerciseId;
+    if (!sessionExerciseId) return [];
+
+    const entries: LoggedSetEntry[] = [];
+
+    logged[exercise.name].forEach((set, i) => {
+      if (!set.completed) return;
+
+      const value = set.value === "" ? null : Number(set.value);
+
+      entries.push({
+        session_exercise_id: sessionExerciseId,
+        set_number: i + 1,
+        weight: set.weight === "" ? null : Number(set.weight),
+        reps_done: exercise.measureType === "reps" ? value : null,
+        seconds_done: exercise.measureType === "time" ? value : null,
+      });
+    });
+
+    return entries;
+  };
+
+  const confirmExerciseLog = async () => {
+    const exercise = exercises.find((e) => e.name === confirmingExercise);
+    if (!exercise?.sessionExerciseId) return;
+
+    setConfirmPending(true);
+    setConfirmError("");
+
+    const { error } = await saveExerciseLog(exercise.sessionExerciseId, buildEntries(exercise));
+    setConfirmPending(false);
+
+    if (error) {
+      setConfirmError(error.message);
+      return;
+    }
+
+    setSavedExercises((prev) => new Set(prev).add(exercise.name));
+    setConfirmingExercise(null);
+  };
+
+  const cancelConfirm = () => {
+    setConfirmingExercise(null);
+    setConfirmError("");
+  };
+
+  const editExercise = (exerciseName: string) => {
+    setSavedExercises((prev) => {
+      const next = new Set(prev);
+      next.delete(exerciseName);
+      return next;
+    });
+
+    setLogged((prev) => ({
+      ...prev,
+      [exerciseName]: prev[exerciseName].map((set) => ({ ...set, completed: false })),
     }));
   };
 
@@ -121,6 +197,12 @@ function PassSession() {
       };
     });
 
+    setSavedExercises((prev) => {
+      const next = new Set(prev);
+      next.delete(oldName);
+      return next;
+    });
+
     setSwapTarget(null);
 
     if (swapped?.sessionExerciseId) {
@@ -132,40 +214,30 @@ function PassSession() {
     setFinishError("");
     setPending(true);
 
-    const entries: LoggedSetEntry[] = [];
-    exercises.forEach((exercise) => {
-      const sessionExerciseId = exercise.sessionExerciseId;
-      if (!sessionExerciseId) return;
-
-      logged[exercise.name].forEach((set, i) => {
-        if (!set.completed) return;
-
-        const value = set.value === "" ? null : Number(set.value);
-
-        entries.push({
-          session_exercise_id: sessionExerciseId,
-          set_number: i + 1,
-          weight: set.weight === "" ? null : Number(set.weight),
-          reps_done: exercise.measureType === "reps" ? value : null,
-          seconds_done: exercise.measureType === "time" ? value : null,
-        });
-      });
+    const unsaved = exercises.filter((exercise) => {
+      if (!exercise.sessionExerciseId || savedExercises.has(exercise.name)) return false;
+      return logged[exercise.name].every((set) => set.completed);
     });
 
-    const { error } = await saveLoggedSets(entries);
-    setPending(false);
+    for (const exercise of unsaved) {
+      if (!exercise.sessionExerciseId) continue;
 
-    if (error) {
-      setFinishError(error.message);
-      return;
+      const { error } = await saveExerciseLog(exercise.sessionExerciseId, buildEntries(exercise));
+
+      if (error) {
+        setPending(false);
+        setFinishError(error.message);
+        return;
+      }
+
+      setSavedExercises((prev) => new Set(prev).add(exercise.name));
     }
 
+    setPending(false);
     setFinished(true);
   };
 
-  const doneExerciseCount = exercises.filter((exercise) =>
-    logged[exercise.name].every((set) => set.completed),
-  ).length;
+  const doneExerciseCount = savedExercises.size;
 
   const swapCandidates = swapTarget
     ? findEquivalentExercises(
@@ -184,6 +256,7 @@ function PassSession() {
       {exercises.map((exercise) => {
         const unitLabel = exercise.measureType === "time" ? "Sek" : "Reps";
         const exerciseDone = logged[exercise.name].every((s) => s.completed);
+        const isSaved = savedExercises.has(exercise.name);
 
         return (
           <section
@@ -195,7 +268,16 @@ function PassSession() {
               <h3>{exercise.name}</h3>
               <div className="row">
                 {exerciseDone && (
-                  <span className="badge badge-highlight">Klar</span>
+                  <span className="badge badge-highlight">{isSaved ? "Loggat" : "Klar"}</span>
+                )}
+                {isSaved && (
+                  <button
+                    type="button"
+                    className="btn-quiet"
+                    onClick={() => editExercise(exercise.name)}
+                  >
+                    Ändra
+                  </button>
                 )}
                 <button
                   type="button"
@@ -268,6 +350,7 @@ function PassSession() {
                           ? `Set ${i + 1} klart`
                           : `Markera set ${i + 1} som klart`
                       }
+                      disabled={isSaved}
                       onClick={() => toggleSet(exercise.name, i)}
                     >
                       {set.completed && (
@@ -302,6 +385,47 @@ function PassSession() {
       {finishError && <p>{finishError}</p>}
 
       <Link to="/training">← Tillbaka till Träning</Link>
+
+      {confirmingExercise && (
+        <div className="dialog-overlay">
+          <div
+            className="dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Bekräfta ${confirmingExercise}`}
+          >
+            <h2>Bekräfta {confirmingExercise}</h2>
+
+            <ul className="picker-results">
+              {logged[confirmingExercise].map((set, i) => (
+                <li key={i}>
+                  Set {i + 1}: {set.weight || "–"} kg ×{" "}
+                  {set.value || "–"}{" "}
+                  {exercises.find((e) => e.name === confirmingExercise)?.measureType === "time"
+                    ? "sek"
+                    : "reps"}
+                </li>
+              ))}
+            </ul>
+
+            {confirmError && <p className="error">{confirmError}</p>}
+
+            <div className="row">
+              <button type="button" onClick={confirmExerciseLog} disabled={confirmPending}>
+                {confirmPending ? "..." : "Spara"}
+              </button>
+              <button
+                type="button"
+                className="btn-quiet"
+                onClick={cancelConfirm}
+                disabled={confirmPending}
+              >
+                Gå tillbaka och ändra
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {finished && (
         <div className="dialog-overlay">

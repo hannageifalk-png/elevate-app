@@ -240,6 +240,20 @@ export async function saveLoggedSets(
   return { error };
 }
 
+export async function saveExerciseLog(
+  sessionExerciseId: string,
+  entries: LoggedSetEntry[],
+): Promise<{ error: { message: string } | null }> {
+  const { error: deleteError } = await supabase
+    .from("logged_set")
+    .delete()
+    .eq("session_exercise_id", sessionExerciseId);
+
+  if (deleteError) return { error: deleteError };
+
+  return saveLoggedSets(entries);
+}
+
 export async function substituteSessionExercise(
   sessionExerciseId: string,
   newExerciseName: string,
