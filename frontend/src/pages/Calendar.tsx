@@ -30,6 +30,8 @@ function Calendar() {
       return;
     }
 
+    const musclesByDate: Record<string, string[]> = {};
+
     for (const workout of data ?? []) {
       const exercises = await fetchSessionExercises(workout.id);
 
@@ -41,11 +43,11 @@ const uniqueMuscles = [...new Set(muscles)];
 
 const date = workout.performed_at.slice(0, 10);
 
-setWorkoutMuscles((current) => ({
-  ...current,
-  [date]: uniqueMuscles,
-}));
+musclesByDate[date] = uniqueMuscles;
 }
+
+setWorkoutMuscles(musclesByDate);
+
  };
 
   loadWorkouts();
