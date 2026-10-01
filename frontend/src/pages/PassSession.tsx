@@ -69,7 +69,7 @@ function PassSession() {
         <section>
           <p>Inget pass valt. Starta ett pass från Träning-sidan.</p>
         </section>
-        <Link to="/traning">← Tillbaka till Träning</Link>
+        <Link to="/training">← Tillbaka till Träning</Link>
       </main>
     );
   }
@@ -301,7 +301,7 @@ function PassSession() {
       </button>
       {finishError && <p>{finishError}</p>}
 
-      <Link to="/traning">← Tillbaka till Träning</Link>
+      <Link to="/training">← Tillbaka till Träning</Link>
 
       {finished && (
         <div className="dialog-overlay">
@@ -313,7 +313,7 @@ function PassSession() {
           >
             <h2>Bra jobbat!</h2>
             <p>Passet är avslutat.</p>
-            <button type="button" autoFocus onClick={() => navigate("/traning")}>
+            <button type="button" autoFocus onClick={() => navigate("/training")}>
               Till Träning
             </button>
           </div>

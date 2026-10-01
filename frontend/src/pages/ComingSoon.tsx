@@ -13,7 +13,7 @@ function ComingSoon({ title }: ComingSoonProps) {
         <p>Coming soon</p>
       </section>
 
-      <Link to="/traning">← Tillbaka till Träning</Link>
+      <Link to="/training">← Tillbaka till Träning</Link>
     </main>
   );
 }

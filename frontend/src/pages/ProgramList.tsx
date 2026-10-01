@@ -94,7 +94,7 @@ function ProgramList() {
         return (
           <Link
             key={program.id}
-            to={`/traning/program/${program.id}`}
+            to={`/training/program/${program.id}`}
             className="card card-link program-card"
           >
             {content}
@@ -102,7 +102,7 @@ function ProgramList() {
         );
       })}
 
-      <Link to="/traning">← Tillbaka till Träning</Link>
+      <Link to="/training">← Tillbaka till Träning</Link>
     </main>
   );
 }
