@@ -1,22 +1,28 @@
 import { useEffect, useState } from "react";
 import "./Calendar.css";
+import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 import { describeExercise, fetchSessionExercises } from "../lib/program";
 
 function Calendar() {
+  const { profile } = useAuth();
+
   const [currentDate, setCurrentDate] = useState(new Date());
 
-const [workoutMuscles, setWorkoutMuscles] = useState<
+  const [workoutMuscles, setWorkoutMuscles] = useState<
   Record<string, string[]>
->({});
+  >({});
 
-const [legendOpen, setLegendOpen] = useState(false);
+  const [legendOpen, setLegendOpen] = useState(false);
 
-useEffect(() => {
+  useEffect(() => {
+  if (!profile) return;
+
   const loadWorkouts = async () => {
     const { data, error } = await supabase
       .from("workout_session")
       .select("id, performed_at")
+      .eq("user_id", profile.id)
       .order("performed_at", { ascending: false });
 
     if (error) {
@@ -24,9 +30,7 @@ useEffect(() => {
       return;
     }
 
-    if (!data) return;
-
-    for (const workout of data) {
+    for (const workout of data ?? []) {
       const exercises = await fetchSessionExercises(workout.id);
 
       const muscles = exercises.map((exercise) => {
@@ -41,11 +45,11 @@ setWorkoutMuscles((current) => ({
   ...current,
   [date]: uniqueMuscles,
 }));
-    }
-  };
+}
+ };
 
   loadWorkouts();
-}, []);
+}, [profile?.id]);
 
   const year = currentDate.getFullYear();
   const monthIndex = currentDate.getMonth();
@@ -85,7 +89,7 @@ const monthName = currentDate.toLocaleString("sv-SE", {
 const month =
   monthName.charAt(0).toUpperCase() + monthName.slice(1);
 
-const getMuscleColor = (muscle: string) => {
+  const getMuscleColor = (muscle: string) => {
   switch (muscle) {
     case "Ben":
       return "green";
@@ -104,7 +108,8 @@ const getMuscleColor = (muscle: string) => {
   }
 };
 
-  return (
+return (
+
 
     <main>
       <div className="calendarHeader">
@@ -139,24 +144,26 @@ const getMuscleColor = (muscle: string) => {
 
   return (
   <button
-  key={day}
-  className={isToday ? "today" : ""}
->
-  <span>{day}</span>
+    key={day}
+    className={isToday ? "today" : ""}
+  >
+    <span>{day}</span>
 
-  <div className="muscleDots">
-    {musclesForDay.map((muscle) => (
-      <span
-        key={muscle}
-        className="muscleDot"
-        style={{
-          backgroundColor: getMuscleColor(muscle),
-        }}
-      />
-    ))}
-  </div>
-</button>
-  );
+    <div className="muscleDots">
+      {musclesForDay
+        .filter((muscle) => muscle)
+        .map((muscle) => (
+          <span
+            key={muscle}
+            className="muscleDot"
+            style={{
+              backgroundColor: getMuscleColor(muscle),
+            }}
+          />
+        ))}
+    </div>
+  </button>
+);
 })}
 
 </div>
@@ -164,7 +171,8 @@ const getMuscleColor = (muscle: string) => {
 <button
   className="muscleLegendButton"
   type="button"
-  onClick={() => setLegendOpen((current) => !current)}>
+  onClick={() => setLegendOpen((current) => !current)}
+>
   <span className="legendDot legendGreen"></span>
   <span className="legendDot legendBlue"></span>
   <span className="legendDot legendPurple"></span>
@@ -177,7 +185,6 @@ const getMuscleColor = (muscle: string) => {
   <div className="muscleLegendModal">
     <div className="muscleLegendContent">
       <h2>Muskelgrupper</h2>
-
       <p>🟢 Ben</p>
       <p>🔵 Rygg</p>
       <p>🟣 Bröst</p>
