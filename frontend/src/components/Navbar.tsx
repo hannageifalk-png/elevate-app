@@ -25,7 +25,7 @@ function Navbar() {
         <span>Följ mina framsteg</span>
       </NavLink>
 
-      <NavLink to="/traning" className="nav-item training-item">
+      <NavLink to="/training" className="nav-item training-item">
         <div className="training-button">
           <Play fill="currentColor" />
         </div>
