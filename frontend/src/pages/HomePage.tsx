@@ -108,7 +108,7 @@ const [recentWorkouts, setRecentWorkouts] = useState<
     <h3>{dailyWorkout?.name ?? "Dagens pass"}</h3>
     <p>{dailyWorkout?.exercises.length ?? 0} övningar</p>
 
-    <button onClick={() => navigate("/traning")}>
+    <button onClick={() => navigate("/training")}>
       SE PASS →
     </button>
   </div>
@@ -155,14 +155,14 @@ const [recentWorkouts, setRecentWorkouts] = useState<
 
         <button
           type="button"
-          onClick={() => navigate("/traning/program")}
+          onClick={() => navigate("/training/program")}
         >
           TRÄNINGSPROGRAM →
         </button>
 
         <button
           type="button"
-          onClick={() => navigate("/traning/dagens")}
+          onClick={() => navigate("/training/dagens")}
         >
           SKAPA EGET TRÄNINGSPASS →
         </button>
